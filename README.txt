@@ -1,0 +1,2 @@
+Una vez que clonaron el repositorio, muevanse a la rama develop y desde ahí creen su rama personal. Finalmente suban su rama vacía (git push origin <nombre>)
+No subir archivos con errores de compilación a develop.
