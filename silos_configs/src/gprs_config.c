@@ -15,13 +15,13 @@ int gprs_init(void){
 	}
 }
 
-char* get_dest_te_number(void){
+char* gprs_get_dest_te_number(void){
 	char dest_aux[15];
 	strcpy(dest_aux, dest_te_number);
 	return dest_aux;
 }
 
-char* get_src_te_number(void){
+char* gprs_get_src_te_number(void){
 	char src_aux[15];
 	strcpy(src_aux, src_te_number);
 	return src_aux;
@@ -34,7 +34,7 @@ char* get_src_te_number(void){
  **    Número de teléfono destino
  **    Formato "+549xxxxxxxxxx" (sin 15 ni 0)
  **
-int set_dest_te_number(char* new_dest_te_number){
+int gprs_set_dest_te_number(char* new_dest_te_number){
 	if (strlen(new_dest_te_number) == 14){
 		if (new_dest_te_number[0] == '+'){
 			strcpy(dest_te_number, new_dest_te_number);

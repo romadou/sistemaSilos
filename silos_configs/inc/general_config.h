@@ -46,9 +46,13 @@
 #endif
 
 void config_init(void);
-int get_desired_temp(void);
-int set_desired_temp(int desired_temp);
-int get_desired_hum(void);
-int set_desired_hum(int desired_hum);
+int config_get_desired_temp(void);
+int config_set_desired_temp(int desired_temp);
+/*int config_save_current_temp(int current_temp);
+int config_get_current_temp(void);
+int config_save_current_hum(int current_hum);
+int config_get_current_hum(void);*/
+int config_get_desired_hum(void);
+int config_set_desired_hum(int desired_hum);
 
 #endif
