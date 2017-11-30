@@ -2,7 +2,7 @@
 #define _UART_FOR_GPRS_H_
 
 #ifndef BAUD_RATE
-#define BAUD_RATE 9600
+#define BAUD_RATE 115200
 #endif
 
 /*==================[inclusions]=============================================*/

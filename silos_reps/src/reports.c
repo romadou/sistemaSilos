@@ -29,12 +29,6 @@ void reporte_temp_y_hum_actual(void){
 	*/
 }
 
-void reporte_gprs_src_te_number(void){
-	char src[15] = gprs_get_src_te_number();
-	/*led_informar_te_number(src);
-	o led_informar_src_te_number(src);*/
-}
-
 void reporte_gprs_dest_te_number(void){
 	char dest[15] = gprs_get_dest_te_number();
 	/*led_informar_te_number(dest);
@@ -42,7 +36,7 @@ void reporte_gprs_dest_te_number(void){
 }
 
 void reporte_general(void){
-	//led_string("Reporte general del sistema");
+	reporte_estado(normal_o_alerta, tipo_de_problema);
 	reporte_temp_y_hum_actual();
 	reporte_gprs_dest_te_number();
 }

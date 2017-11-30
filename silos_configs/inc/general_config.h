@@ -6,7 +6,7 @@
 #endif
 
 #ifndef TEMP_MIN
-#define TEMP_MIN -400
+#define TEMP_MIN 0
 #endif
 
 #ifndef HUM_MAX

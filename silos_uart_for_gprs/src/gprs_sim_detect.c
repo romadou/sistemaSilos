@@ -72,8 +72,8 @@ int main(void){
          delay(100);
       }
       else{
-         uartWriteString( UART_232, "AT" );
-         uartWriteString( UART_USB, "AT\r\n");
+         //uartWriteString( UART_232, "AT" );
+         //uartWriteString( UART_USB, "AT\r\n");
          delay(1000);
       }
    }

@@ -1,0 +1,4 @@
+Buffer de recepción teclado
+	número gprs
+	ingreso temp y hum
+	(funciones de borrado de un carácter)
