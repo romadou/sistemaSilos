@@ -53,8 +53,35 @@ int main(void){
    uint8_t dato  = 0;
 
    //imprimirMensajeDeBienvenida();
-   uartWriteString( UART_USB, "AT\r\n");
-   uartWriteString( UART_232, "AT" );
+   delay(1000);
+   //Activar impresión de códigos de error
+   uartWriteString( UART_232, "AT+CMEE=1\r\n");
+   delay(5000);
+   while( uartReadByte( UART_232, &dato ) ){
+      /* Se reenvía el dato a la UART_USB realizando un puente entre ambas */
+      uartWriteByte( UART_USB, dato );
+   }
+   //Activar serivicio de mensajes
+   uartWriteString( UART_232, "AT+CMGF=1\r\n");
+   delay(5000);
+   while( uartReadByte( UART_232, &dato ) ){
+      /* Se reenvía el dato a la UART_USB realizando un puente entre ambas */
+      uartWriteByte( UART_USB, dato );
+   }
+   //Activar almacenamiento de mensajes en SIM
+   uartWriteString( UART_232, "AT+CPMS=\"SM\"\r\n");
+   delay(5000);
+   while( uartReadByte( UART_232, &dato ) ){
+      /* Se reenvía el dato a la UART_USB realizando un puente entre ambas */
+      uartWriteByte( UART_USB, dato );
+   }
+   //Para leer el primer mensaje recibido que no parece estar recibiendo
+   uartWriteString( UART_232, "AT+CMGR=1\r\n");
+   delay(5000);
+   while( uartReadByte( UART_232, &dato ) ){
+      /* Se reenvía el dato a la UART_USB realizando un puente entre ambas */
+      uartWriteByte( UART_USB, dato );
+   }
 
    /* ------------- REPETIR POR SIEMPRE ------------- */
    while(1) {
@@ -65,17 +92,15 @@ int main(void){
          //uartWriteByte( UART_USB, dato );
       //}
 
-      /* Si recibe un byte de la UART_232 lo guardarlo en la variable dato. */
-      if( uartReadByte( UART_232, &dato ) ){
+      /* Si recibe un byte de la UART_232 guardarlo en la variable dato. */
+      while( uartReadByte( UART_232, &dato ) ){
          /* Se reenvía el dato a la UART_USB realizando un puente entre ambas */
          uartWriteByte( UART_USB, dato );
-         delay(100);
       }
-      else{
-         //uartWriteString( UART_232, "AT" );
-         //uartWriteString( UART_USB, "AT\r\n");
-         delay(1000);
-      }
+
+      delay(5000);
+
+
    }
 }
 
