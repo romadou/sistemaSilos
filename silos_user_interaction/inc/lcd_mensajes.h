@@ -1,4 +1,5 @@
- *	lcd_mensajes.h
+/* 
+ * lcd_mensajes.h
  *
  *  Created on: 22/10/2017
  *      Author: Krasowski - Madou
@@ -16,22 +17,18 @@
 #endif 
 
 typedef enum estado {NORMAL, ALERTA};
-typedef enum problema {TEMPERATURA, HUMEDAD, SENSOR, GPRS, VENTILACION, TEL_NO_CONF, TEMP_NO_CONF, HUM_NO_CONF};
+typedef enum problema {TEMPERATURA, HUMEDAD, SENSOR, GPRS, VENTILACION, TEL_NO_CONF, TEMP_NO_CONF, HUM_NO_CONF, CRITICO, OK};
+typedef enum configurable {TELEFONO, TEMPERATURA, HUMEDAD};
 
-void LCD_mostrarNormal(void); /* Visualización del mensaje "NORMAL" en la primera línea del LCD */
-void LCD_mostrarAlerta(void); /* Visualización del mensaje "ALERTA" en la primera línea del LCD */
-void LCD_mostrarProblemaTemperatura(void); /* Visualización del mensaje de problema de temperatura en la segunda línea del LCD */
-void LCD_mostrarProblemaHumedad(void); /* Visualización del mensaje de problema de humedad en la segunda línea del LCD */
-void LCD_mostrarProblemaSensor(void); /* Visualización del mensaje de problema de desconexion del sensor en la segunda línea del LCD */
-void LCD_mostrarProblemaGPRS(void); /* Visualización del mensaje de problema de desconexion GPRS en la segunda línea del LCD */
-void LCD_mostrarProblemaVentilacion(void); /* Visualización del mensaje de problema de no configuración de telefóno en la segunda línea del LCD */
-void LCD_mostrarProblemaTel_No_Conf(void); /* Visualización del mensaje de problema de no configuración de temperatura en la segunda línea del LCD */
-void LCD_mostrarProblemaTemp_No_Conf(void); /* Visualización del mensaje de problema de no configuración de humedad en la segunda línea del LCD */
-void LCD_mostrarProblemaHum_No_Conf(void); /* Visualización del mensaje de problema de temperatura en la segunda línea del LCD */
-void LCD_mostrarTemperaturaInterior(int temp); /* Visualización del mensaje "T. Int:" con su valor en la tercer línea del LCD */
-void LCD_mostrarTemperaturaExterior(int temp); /* Visualización del mensaje "T. Ext:" con su valor en la tercer línea del LCD */
-void LCD_mostrarHumedadInterior(int hum); /* Visualización del mensaje "H. Int:" con su valor en la cuarta línea del LCD */
-void LCD_mostrarHumedadExterior(int hum); /* Visualización del mensaje "H. Ext:" con su valor en la cuarta línea del LCD */
-void LCD_mostrarNumeral(void); /* Visualización del caracter numeral en el rincón derecho inferior del LCD */
+void LCD_limpiarLinea(int l); /* Limpieza del número de línea recibido */
+void LCD_limpiarPantalla(void); /* Limpieza de las cuatro líneas correspondientes al display */
+void LCD_estado(estado e, problema p); /* Actualización de los mensajes de estado del sistema */
+void LCD_valores(int ti, int te, int hi, int he); /* Actualización de los valores de temperatura y humedad */
+void LCD_menuBienvenida (void); /* Menu con mensaje de bienvenida */
+void LCD_menuMonitor (estado e, problema p, int ti, int te, int hi, int he); /* Menu formado por el estado del sistema y los valores de temperatura y humedad */
+void LCD_menuConfiguracion(configurable c); /* Menu de pedido de configuración */
+
+
+
 
 #endif /* MENSAJES_H_ */
