@@ -1,42 +1,38 @@
 #include "reports.h"
 #include "general_config.h"
-//#include "sensors.h"
-//#include "led.h"
-//#include "freeRtos.h" o como se llame, si es necesario hacer delays entre impresión e impresión (preguntar)
+#include "gprs.h"
+#include "sensors.h"
+#include "lcd_mensajes.h"
+//#include "freeRtos.h" o como se llame
 
 
-void reporte_temperatura_actual(void){
-	int temp;
-	//temp = sensors_getTempSensada();
-	//led_informar_temp(temp);
-}
-
-void reporte_humedad_actual(void){
-	int hum;
-	//hum = sensors_getHumSensada();
-	//led_informar_hum(hum);
-}
-
-void reporte_temp_y_hum_actual(void){
-	reporte_temperatura_actual();
-	//delay
-	reporte_humedad_actual();
-
-	/* o
-	int temp = sensors_getTempSensada();
-	int hum = sensors_getHumSensada();
-	led_informar_temp_y_hum(temp, hum);
-	*/
-}
-
-void reporte_gprs_dest_te_number(void){
-	char dest[15] = gprs_get_dest_te_number();
-	/*led_informar_te_number(dest);
-	o led_informar_dest_te_number(dest);*/
-}
-
-void reporte_general(void){
-	reporte_estado(normal_o_alerta, tipo_de_problema);
-	reporte_temp_y_hum_actual();
-	reporte_gprs_dest_te_number();
+void REPORTE_general(int temp_in, int temp_out, int hum_in, int hum_out){
+	//revisar lógica y funciones de ok de sensores, ventilacion y gprs
+	/* Prioridad de problemas: crítico, temperatura, humedad, sensor, ventilación, gprs */ 
+	int aux_temp = CONFIG_check_temp(temp_in, temp_out); 
+	int aux_hum = CONFIG_check_hum(hum_in, hum_out); 
+	if (aux_temp == TEMP_ALERT){
+		LCD_menuMonitor(ALERTA, TEMPERATURA, temp_in/10, temp_out/10, hum_in/10, hum_out/10);
+		//GPRS_alerta();	
+	} else if (aux_temp == TEMP_DANGER){
+		LCD_menuMonitor(ALERTA, CRITICO, temp_in/10, temp_out/10, hum_in/10, hum_out/10);
+		//GPRS_critico();	
+	} else if (aux_hum == HUM_ALERT){
+		LCD_menuMonitor(ALERTA, HUMEDAD, temp_in/10, temp_out/10, hum_in/10, hum_out/10);
+		//GPRS_alerta();	
+	} else if (aux_hum == HUM_DANGER){
+		LCD_menuMonitor(ALERTA, CRITICO, temp_in/10, temp_out/10, hum_in/10, hum_out/10);
+		//GPRS_critico();	
+	} else if (!SENSOR_is_ok()){
+		LCD_menuMonitor(ALERTA, SENSOR, temp_in/10, temp_out/10, hum_in/10, hum_out/10);
+		//GPRS_alerta();
+	} else if (!VENT_is_ok()){
+		LCD_menuMonitor(ALERTA, VENTILACION, temp_in/10, temp_out/10, hum_in/10, hum_out/10);
+		//GPRS_alerta();	
+	} else if (!GPRS_is_ok()){
+		LCD_menuMonitor(ALERTA, GPRS, temp_in/10, temp_out/10, hum_in/10, hum_out/10);
+		//GPRS_alerta();	
+	} else{
+		LCD_menuMonitor(NORMAL, OK, temp_in/10, temp_out/10, hum_in/10, hum_out/10);
+	}
 }

@@ -1,4 +1,7 @@
-Buffer de recepción teclado
-	número gprs
-	ingreso temp y hum
-	(funciones de borrado de un carácter)
+Config::
+	lógica temp + hum
+	manejo de respuestas: ventilación ==> llamados a gprs desde acá, no desde el reporte general.
+
+Reports::
+	corroborar con Delfina cómo recibo temp y hum
+	funciones is_OK en los if anidados

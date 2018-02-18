@@ -6,7 +6,7 @@
 #endif
 
 #ifndef TEMP_MIN
-#define TEMP_MIN 0
+#define TEMP_MIN -400
 #endif
 
 #ifndef HUM_MAX
@@ -45,14 +45,11 @@
 #define HUM_TOO_HIGH 2
 #endif
 
-void config_init(void);
-int config_get_desired_temp(void);
-int config_set_desired_temp(int desired_temp);
-/*int config_save_current_temp(int current_temp);
-int config_get_current_temp(void);
-int config_save_current_hum(int current_hum);
-int config_get_current_hum(void);*/
-int config_get_desired_hum(void);
-int config_set_desired_hum(int desired_hum);
+void CONFIG_init(void);
+int CONFIG_get_desired_temp(void);
+int CONFIG_set_desired_temp(int desired_temp);
+int CONFIG_check_temp(int temp_in, int temp_out);
+int CONFIG_get_desired_hum(void);
+int CONFIG_set_desired_hum(int desired_hum);
 
 #endif
