@@ -1,7 +1,11 @@
 Config::
-	lógica temp + hum
-	manejo de respuestas: ventilación ==> llamados a gprs desde acá, no desde el reporte general.
+	lógica temp + hum (no más en config -> va en actuación, ver con Delfina)
+	manejo de respuestas: ventilación ==> ver llamados a ventilación, gprs, etc
 
 Reports::
-	corroborar con Delfina cómo recibo temp y hum
-	funciones is_OK en los if anidados
+	Van incluidos en la función display update de la MEF
+	Ver:
+		-INACTIVECOMP => si se informa el número de sensor caído
+		-FANACTIVE y STATE (que sería ALERT) => hacen falta los dos? qué hace c/u?
+		-MENU => verificar que dé opciones para las tres configuraciones (y sus subsiguientes mensajes)(desde dónde llego a c/u)
+		-RO: generar mensajes de WRONGTEMP, WRONGHUM, HUMSET, TEMPSET, NUMSET, e informe de parámetros actuales (temp deseada actual, hum deseada actual, numero destino actual)

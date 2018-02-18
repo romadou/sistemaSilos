@@ -89,7 +89,7 @@ void GPRS_alerta(void){
    uint8_t dato  = 0;
    char mens[28] = "SILO: CONDICIONES DE ALERTA";
    strcpy(mens, "AT+CMGS=\"");
-   strcat(mens, numero);
+   strcat(mens, dest_number);
    strcat(mens, "\"\r");
    for (i=0; i<50; i++){
       delay(10);
@@ -112,7 +112,7 @@ void GPRS_critico(void){
    uint8_t dato  = 0;
    char mens[21] = "SILO: ESTADO CRITICO";
    strcpy(mens, "AT+CMGS=\"");
-   strcat(mens, numero);
+   strcat(mens, dest_number);
    strcat(mens, "\"\r");
    for (i=0; i<50; i++){
       delay(10);
