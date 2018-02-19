@@ -21,9 +21,10 @@ void mostrarNormal(void); /* Visualización del mensaje "NORMAL" en la primera l
 void mostrarAlerta(void); /* Visualización del mensaje "ALERTA" en la primera línea del LCD */
 void mostrarProblemaTemperatura(void); /* Visualización del mensaje de problema de temperatura en la segunda línea del LCD */
 void mostrarProblemaHumedad(void); /* Visualización del mensaje de problema de humedad en la segunda línea del LCD */
+void mostrarProblemaVentilando(void); /* Visualización del mensaje de alerta de ventilación encendida en la segunda línea del LCD */
 void mostrarProblemaSensor(void); /* Visualización del mensaje de problema de desconexion del sensor en la segunda línea del LCD */
 void mostrarProblemaGPRS(void); /* Visualización del mensaje de problema de desconexion GPRS en la segunda línea del LCD */
-void mostrarProblemaVentilacion(void); /* Visualización del mensaje de alerta de ventilación no encendida en la segunda línea del LCD */
+void mostrarProblemaVentilacion(void); /* Visualización del mensaje de alerta de ventilación no funcionando en la segunda línea del LCD */
 void mostrarProblemaTel_No_Conf(void); /* Visualización del mensaje de problema de no configuración de telefóno en la segunda línea del LCD */
 void mostrarProblemaTemp_No_Conf(void); /* Visualización del mensaje de problema de no configuración de temperatura en la segunda línea del LCD */ 
 void mostrarProblemaHum_No_Conf(void); /* Visualización del mensaje de problema de no configuración de humedad en la segunda línea del LCD */
@@ -88,6 +89,8 @@ void LCD_estado(estado e, problema p){
 							break;
 		case HUMEDAD : 	mostrarProblemaHumedad();
 						break;
+		case VENTILANDO : 	mostrarProblemaVentilando();
+							break;
 		case SENSOR : 	mostrarProblemaSensor();
 						break;
 		case GPRS : 	mostrarProblemaGPRS();
@@ -316,6 +319,11 @@ void mostrarProblemaTemperatura(void){
 void mostrarProblemaHumedad(void){
 	pantallaMensaje	= "Hum alta";
 	LCD_pos_xy(6,1);
+	LCD_write_string(pantallaMensaje);
+}
+void mostrarProblemaVentilando(void){
+	pantallaMensaje	= "Ventilando";
+	LCD_pos_xy(5,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaSensor(void){

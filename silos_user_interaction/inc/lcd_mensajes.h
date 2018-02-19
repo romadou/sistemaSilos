@@ -17,7 +17,7 @@
 #endif 
 
 typedef enum estado {NORMAL, ALERTA};
-typedef enum problema {TEMPERATURA, HUMEDAD, SENSOR, GPRS, VENTILACION, TEL_NO_CONF, TEMP_NO_CONF, HUM_NO_CONF, CRITICO, OK};
+typedef enum problema {TEMPERATURA, HUMEDAD, VENTILANDO, SENSOR, GPRS, VENTILACION, TEL_NO_CONF, TEMP_NO_CONF, HUM_NO_CONF, CRITICO, OK};
 typedef enum configurable {TELEFONO, TEMPERATURA, HUMEDAD};
 
 void LCD_menuBienvenida(void); /* Configuración inicial del display y  menu con mensaje de bienvenida */
