@@ -1,15 +1,15 @@
 /*
  * lcd.h
  *
- *  Modified on: 30/11/2017
- *      Author: Madou
+ *  Created on: 30/11/2016
+ *      Author: Alvarez
  */
 
 #ifndef LCD_H_
 #define LCD_H_
 
 #include "chip.h"
-#include "cmsis.h"
+ #include "cmsis.h"
 
 #define LCD_FIRST_LINE		0x00	// Address of the first line of the LCD (0-19)
 #define LCD_SECOND_LINE     0x40    // Address of the second line of the LCD (64- 83)

@@ -1,0 +1,6 @@
+ACLARACIONES:
+
+Tanto en el teclado como el display es necesario configurar los pines correspondientes a los pines de conexión.
+Para esto modificar:
+	keypad.c
+	lcd.c
