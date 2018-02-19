@@ -38,56 +38,64 @@ void init_activeS(void);
 
 void PMM_init(void) {
 	uartConfig(UART_RS485, BAUDRATE_9600);
+	uartDisableRxInterrupt(UART_RS485);
 	init_activeS();
 	datagram[0] = 1;
 	PMM_verify();
 }
 
 void PMM_verify(void) {
-	int i;
+	int i, j;
+	unsigned char e;
 	sDown = 0;
 	datagram[2] = COD_STATUS;
 	for (i = 0, i<CANTS, i++) {
 		datagram[1] = i;
 		uartWriteString(UART_RS485, datagram);
-		// uartReciveString(UART_RS485, resp_status, 3);
-		/*if (fAvailable){		//Si el sensor contesta
-		activeS[i] = 1;
+		while(!timeout());							// FUNCION A VERIFICAR
+		e = uartReceiveByte(UART_RS485, resp_status);
+		if (e){		
+			activeS[i] = 0;
 		}
 		else{
-		activeS[i] = 0;
+			activeS[i] = 1;
+			for (j=1;j<4;j++){
+				uartReceiveByte(UART_RS485, &resp_status[j]);
+			}
 		}
-		*/
 	}
 }
 
 unsigned char PMM_getData(unsigned char *information) {
-	int i, b;
+	int i, j;
+	unsigned char e;
 	datagram[2] = COD_DATA;
 	for (i = 0, i<CANTS, i++) {
-		if (activeS) {			//Si el sensor funciona
+		if (activeS[i]) {			//Si el sensor funciona
 			datagram[1] = i;
 			uartWriteString(UART_RS485, datagram);
-			// uartReciveString(UART_RS485, resp_data, 7);
-			/*if (fAvailable){                          //Si se recibió respuesta
-			for (b=0; b<CANTB; b++){
-			information[i*CANTB+B]=resp_data[2+b];
-			}
-			if (!activeS[i])
-			activeS = 1;
+			while(!timeout());							// FUNCION A VERIFICAR
+			e = uartReceiveByte(UART_RS485, resp_data);
+			if (e){		
+				if (++cantVerifS[i] == 3){
+					activeS[i] = 0;
+					sDown = 1;
+					cantVerifS[i] = 0;
+				}
 			}
 			else{
-			if (++cont == 3){
-			activeS = 0;
-			sDown = 1;
+				activeS[i] = 1;
+				for (j=1;j<7;j++){
+					uartReceiveByte(UART_RS485, &resp_data[j]);
+				}
+				//VERIFICAR QUE DEVUELVE INFORMATION
 			}
-			}
-			*/
 		}
 	}
 	return sDown;
 }
 
+/*
 unsigned char PMM_testTx(void) {
 	datagram[1] = 0x7A;  //Un código de identificación random
 
@@ -99,6 +107,7 @@ unsigned char PMM_testTx(void) {
 	datagram[2] = COD_DATA;
 	uartWriteString(UART_RS485, datagram);
 }
+*/
 
 void init_activeS(void) {
 	int i;
