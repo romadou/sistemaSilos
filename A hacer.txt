@@ -9,3 +9,7 @@ Reports::
 		-FANACTIVE y STATE (que sería ALERT) => hacen falta los dos? qué hace c/u?
 		-MENU => verificar que dé opciones para las tres configuraciones (y sus subsiguientes mensajes)(desde dónde llego a c/u)
 		-RO: generar mensajes de WRONGTEMP, WRONGHUM, HUMSET, TEMPSET, NUMSET, e informe de parámetros actuales (temp deseada actual, hum deseada actual, numero destino actual)
+
+Comm::
+	Hablar con EDU sobre PMM_getInfo => ¿qué es *information?
+		(se supone que es la info del sensor, 40 bits)
