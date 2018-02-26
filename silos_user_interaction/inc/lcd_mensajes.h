@@ -5,8 +5,8 @@
  *      Author: Krasowski - Madou
  */
 
-#ifndef MENSAJES_H_
-#define MENSAJES_H_
+#ifndef LCD_MENSAJES_H_
+#define LCD_MENSAJES_H_
 
 #ifndef MAX_X
 #define MAX_X 20
@@ -16,9 +16,9 @@
 #define MAX_Y 4
 #endif 
 
-typedef enum estado {NORMAL, ALERTA};
-typedef enum problema {TEMPERATURA, HUMEDAD, VENTILANDO, SENSOR, GPRS, VENTILACION, TEL_NO_CONF, TEMP_NO_CONF, HUM_NO_CONF, CRITICO, OK};
-typedef enum configurable {TELEFONO, TEMPERATURA, HUMEDAD};
+typedef enum {NORMAL, ALERTA} estado; 
+typedef enum {TEMPERATURA, HUMEDAD, VENTILANDO, SENSOR, GPRS, VENTILACION, TEL_NO_CONF, TEMP_NO_CONF, HUM_NO_CONF, CRITICO, OK} problema;
+typedef enum {TELEFONO, TEMP, HUM} configurable;
 
 void LCD_menuBienvenida(void); /* Configuración inicial del display y  menu con mensaje de bienvenida */
 void LCD_menuOpciones(void); /* Menu de opciones a otros menus */
@@ -31,6 +31,7 @@ void LCD_configConfirmarNum(void); /* Mensaje indicando que la operación fue ex
 void LCD_configEliminarNum(void); /* Mensaje indicando que la operación se canceló */
 void LCD_configErrorNum(void); /* Mensaje indicando que se presentó un error */
 void LCD_menuConfigActual(int temp, int hum, char* tel); /* Menu que refleja los valores seteados */
+void LCD_sensoresActivos(int sensores_activos);
 void LCD_limpiarLinea(int l); /* Limpieza del número de línea recibido */
 void LCD_limpiarPantalla(void); /* Limpieza de las cuatro líneas correspondientes al display */
 

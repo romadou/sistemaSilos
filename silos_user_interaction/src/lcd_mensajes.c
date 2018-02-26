@@ -5,8 +5,9 @@
  *      Author: Madou
  */
  
-#include < lcd_mensajes.h >
-#include < lcd.h >
+#include "lcd_mensajes.h"
+#include "lcd.h"
+#include "string.h"
 
 /* Variables privadas */
 /* Formato de muestra de mensaje */
@@ -24,7 +25,7 @@ void mostrarProblemaHumedad(void); /* Visualización del mensaje de problema de 
 void mostrarProblemaVentilando(void); /* Visualización del mensaje de alerta de ventilación encendida en la segunda línea del LCD */
 void mostrarProblemaSensor(void); /* Visualización del mensaje de problema de desconexion del sensor en la segunda línea del LCD */
 void mostrarProblemaGPRS(void); /* Visualización del mensaje de problema de desconexion GPRS en la segunda línea del LCD */
-void mostrarProblemaVentilacion(void); /* Visualización del mensaje de alerta de ventilación no funcionando en la segunda línea del LCD */
+void mostrarProblemaVentilacion(void); /* Visualización del mensaje de alerta de ventilación no encendida en la segunda línea del LCD */
 void mostrarProblemaTel_No_Conf(void); /* Visualización del mensaje de problema de no configuración de telefóno en la segunda línea del LCD */
 void mostrarProblemaTemp_No_Conf(void); /* Visualización del mensaje de problema de no configuración de temperatura en la segunda línea del LCD */ 
 void mostrarProblemaHum_No_Conf(void); /* Visualización del mensaje de problema de no configuración de humedad en la segunda línea del LCD */
@@ -41,32 +42,32 @@ void LCD_menuBienvenida(void){
 	LCD_init(DISPLAY_8X5|_2_LINES, DISPLAY_ON|CURSOR_OFF|CURSOR_NOBLINK);
 
 	LCD_limpiarPantalla();
-	pantallaMensaje	= "Bienvenido al";
+	strcpy(pantallaMensaje, "Bienvenido al");
 	LCD_pos_xy(3,0);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje	= "Sistema de Control";
+	strcpy(pantallaMensaje, "Sistema de Control");
 	LCD_pos_xy(1,1);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje	= "para Silos";
+	strcpy(pantallaMensaje, "para Silos");
 	LCD_pos_xy(5,2);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje	= "AKMM";
+	strcpy(pantallaMensaje, "AKMM");	
 	LCD_pos_xy(8,3);
 	LCD_write_string(pantallaMensaje);
 } 
 
 void LCD_menuOpciones(void){
 	LCD_limpiarPantalla();
-	pantallaMensaje = "1. Reporte General";
+	strcpy(pantallaMensaje, "1. Reporte General");
 	LCD_pos_xy(0,0);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje = "2. Ver Config Actual";
+	strcpy(pantallaMensaje, "2. Ver Config Actual");
 	LCD_pos_xy(0,1);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje = "3. Config Temp y Hum";
+	strcpy(pantallaMensaje, "3. Config Temp y Hum");
 	LCD_pos_xy(0,2);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje = "4. Config Tel";
+	strcpy(pantallaMensaje, "4. Config Tel");
 	LCD_pos_xy(0,3);
 	LCD_write_string(pantallaMensaje);
 	mostrarNumeral();	
@@ -141,6 +142,8 @@ void LCD_menuMonitor(estado e, problema p, int tempi, int tempe, int humi, int h
 							break;
 		case HUMEDAD : 	mostrarProblemaHumedad();
 						break;
+		case VENTILANDO : 	mostrarProblemaVentilando();
+							break;
 		case SENSOR : 	mostrarProblemaSensor();
 						break;
 		case GPRS : 	mostrarProblemaGPRS();
@@ -172,23 +175,26 @@ void LCD_menuMonitor(estado e, problema p, int tempi, int tempe, int humi, int h
 
 void LCD_menuConfiguracion(configurable c){
 	LCD_limpiarPantalla();
-	pantallaMensaje = "Ingrese";
+	strcpy(pantallaMensaje, "Ingrese");
 	LCD_pos_xy(6,0);
 	LCD_write_string(pantallaMensaje);
-	switch(p){
-		case TELEFONO : pantallaMensaje = "nro de telefono";
+	switch(c){
+		case TELEFONO : 
+						strcpy(pantallaMensaje, "nro de telefono");
 						LCD_pos_xy(2,1);
 						break;
-		case TEMPERATURA: 	pantallaMensaje = "temperatura";
+		case TEMP: 	
+							strcpy(pantallaMensaje, "temperatura");
 							LCD_pos_xy(4,1);
 							break;
-		case HUMEDAD : 	pantallaMensaje = "humedad";
+		case HUM : 	
+						strcpy(pantallaMensaje, "humedad");
 						LCD_pos_xy(6,1);
 						break;
 		default : ;
 	}
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje = "*:Guardar #:Cancelar";
+	strcpy(pantallaMensaje, "*:Guardar #:Cancelar");
 	LCD_pos_xy(0,3);
 	LCD_write_string(pantallaMensaje);
 }
@@ -201,10 +207,10 @@ void LCD_configIngresarNum(char num){
 
 void LCD_configConfirmarNum(void){
 	LCD_limpiarPantalla();
-	pantallaMensaje = "VALOR";
+	strcpy(pantallaMensaje, "VALOR");
 	LCD_pos_xy(7,1);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje = "GUARDADO";
+	strcpy(pantallaMensaje, "GUARDADO");
 	LCD_pos_xy(6,2);
 	LCD_write_string(pantallaMensaje);
 	pos = 0;
@@ -212,10 +218,10 @@ void LCD_configConfirmarNum(void){
 
 void LCD_configEliminarNum(void){
 	LCD_limpiarPantalla();
-	pantallaMensaje = "OPERACION";
+	strcpy(pantallaMensaje, "OPERACION");
 	LCD_pos_xy(5,1);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje = "CANCELADA";
+	strcpy(pantallaMensaje, "CANCELADA");
 	LCD_pos_xy(5,2);
 	LCD_write_string(pantallaMensaje);
 	pos = 0;
@@ -223,10 +229,10 @@ void LCD_configEliminarNum(void){
 
 void LCD_configErrorNum(void){
 	LCD_limpiarPantalla();
-	pantallaMensaje = "VALOR FUERA";
+	strcpy(pantallaMensaje, "VALOR FUERA");
 	LCD_pos_xy(4,1);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje = "DE RANGO";
+	strcpy(pantallaMensaje, "DE RANGO");
 	LCD_pos_xy(6,2);
 	LCD_write_string(pantallaMensaje);
 	pos = 0;
@@ -234,29 +240,37 @@ void LCD_configErrorNum(void){
 
 void LCD_menuConfigActual(int temp, int hum, char* tel){
 	LCD_limpiarPantalla();
-	pantallaMensaje = "Config Actual";
+	strcpy(pantallaMensaje, "Config Actual");
 	LCD_pos_xy(3,0);
 	LCD_write_string(pantallaMensaje);
-	pantallaMensaje = "Temp: ";
+	strcpy(pantallaMensaje, "Temp: ");
 	LCD_pos_xy(2,0);
 	LCD_write_string(pantallaMensaje);
 	numASCII(temp);
 	LCD_write_string(valor);
-	pantallaMensaje = "Hum: ";
+	strcpy(pantallaMensaje, "Hum: ");
 	LCD_pos_xy(2,0);
 	LCD_write_string(pantallaMensaje);
 	numASCII(hum);
 	LCD_write_string(valor);
-	pantallaMensaje = "Tel: ";
+	strcpy(pantallaMensaje, "Tel: ");
 	LCD_pos_xy(2,0);
 	LCD_write_string(pantallaMensaje);
 	LCD_write_string(tel);
 	mostrarNumeral();
 }
 
+void LCD_sensoresActivos(int sensores_activos){
+	LCD_limpiarLinea(0);
+	LCD_pos_xy(0,0);
+	strcpy(pantallaMensaje, "Sensores activos: ");
+	numASCII(sensores_activos);
+	LCD_write_string(valor);
+}
+
 void LCD_limpiarLinea(int l){
 	if (l < MAX_Y){
-		pantallaMensaje	= "                    ";
+		strcpy(pantallaMensaje, "                    ");
 		LCD_pos_xy(0,l);
 		LCD_write_string(pantallaMensaje);
 	}
@@ -264,14 +278,12 @@ void LCD_limpiarLinea(int l){
 
 void LCD_limpiarPantalla(void){
 	int l;
-	for (l=0;i<MAX_Y;i++){
-		pantallaMensaje	= "                    ";
+	for (l=0;l<MAX_Y;l++){
+		strcpy(pantallaMensaje, "                    ");
 		LCD_pos_xy(0,l);
 		LCD_write_string(pantallaMensaje);
 	}
 }
-
-
 
 void numASCII(int num){
 	int c; 
@@ -301,90 +313,90 @@ void numASCII(int num){
 }
 
 void mostrarNormal(void){
-	pantallaMensaje = "FUNC NORMAL";
+	strcpy(pantallaMensaje, "FUNC NORMAL");
 	LCD_pos_xy(4,0);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarAlerta(void){
-	pantallaMensaje = "ALERTA";
+	strcpy(pantallaMensaje, "ALERTA");
 	LCD_pos_xy(7,0);
 	LCD_write_string(pantallaMensaje);
 }
 
 void mostrarProblemaTemperatura(void){
-	pantallaMensaje = "Temp alta";
+	strcpy(pantallaMensaje, "Temp alta");
 	LCD_pos_xy(5,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaHumedad(void){
-	pantallaMensaje	= "Hum alta";
+	strcpy(pantallaMensaje, "Hum alta");
 	LCD_pos_xy(6,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaVentilando(void){
-	pantallaMensaje	= "Ventilando";
+	strcpy(pantallaMensaje, "Ventilando");
 	LCD_pos_xy(5,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaSensor(void){
-	pantallaMensaje	= "Sensor caido";
+	strcpy(pantallaMensaje, "Sensor caido");
 	LCD_pos_xy(3,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaGPRS(void){
-	pantallaMensaje	= "GPRS OFF";
+	strcpy(pantallaMensaje, "GPRS OFF");
 	LCD_pos_xy(6,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaVentilacion(void){
-	pantallaMensaje	= "Vent caido";
+	strcpy(pantallaMensaje, "Vent caido");
 	LCD_pos_xy(5,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaTel_No_Conf(void){
-	pantallaMensaje	= "Tel no config";
+	strcpy(pantallaMensaje, "Tel no config");
 	LCD_pos_xy(4,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaTemp_No_Conf(void){
-	pantallaMensaje	= "Temp no config";
+	strcpy(pantallaMensaje, "Temp no config");
 	 LCD_pos_xy(3,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaHum_No_Conf(void){
-	pantallaMensaje	= "Hum no config";
+	strcpy(pantallaMensaje, "Hum no config");
 	LCD_pos_xy(4,1);
 	LCD_write_string(pantallaMensaje);
 }
 void mostrarProblemaCritico(void){
-	pantallaMensaje	= "CRITICO";
+	strcpy(pantallaMensaje, "CRITICO");
 	LCD_pos_xy(6,1);
 	LCD_write_string(pantallaMensaje);
 }
 
 void mostrarTemperaturaInterior(int tempi){
-	pantallaMensaje	= "T.I: ";
+	strcpy(pantallaMensaje, "T.I: ");
 	LCD_pos_xy(1,2);
 	LCD_write_string(pantallaMensaje);
 	numASCII(tempi);
 	LCD_write_string(valor);
 }
 void mostrarTemperaturaExterior(int tempe){
-	pantallaMensaje	= "T.E: ";
+	strcpy(pantallaMensaje, "T.E: ");
 	LCD_pos_xy(11,2);
 	LCD_write_string(pantallaMensaje);
 	numASCII(tempe);
 	LCD_write_string(valor);	
 }
 void mostrarHumedadInterior(int humi){
-	pantallaMensaje	= "H.I: ";
+	strcpy(pantallaMensaje, "H.I: ");
 	LCD_pos_xy(1,3);
 	LCD_write_string(pantallaMensaje);
 	numASCII(humi);
 	LCD_write_string(valor);
 }
 void mostrarHumedadExterior(int hume){
-	pantallaMensaje	= "H.E: ";
+	strcpy(pantallaMensaje, "H.E: ");
 	LCD_pos_xy(11,3);
 	LCD_write_string(pantallaMensaje);
 	numASCII(hume);
