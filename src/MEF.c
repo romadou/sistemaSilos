@@ -16,9 +16,7 @@ static state currentState;
 
 static uint8_t stateTimeout;
 extern uint8_t key;
-//MOMENTANTEO
-static uint8_t cel;
-//MOMENTANEO
+
 /* 
 Devuelve 1 si alcanzó el timeout, 0 en caso contrario
 */
@@ -36,7 +34,6 @@ void MEF_Init(){
 	currentState=DEFAULT;
 	stateTimeout=16;
 	loaded_input=0;
-	cel=2395403455;
  }
 
 void MEF_updateState(uint8_t critico){
@@ -184,7 +181,7 @@ void MEF_updateState(uint8_t critico){
 				case '*':
 					stateTimeout=8;
 					if (loaded_input==10){
-						//GPRS_set_dest_num();
+						GPRS_set_dest_num();
 						currentState=NUMERO_INGRESADO;
 						loaded_input=0;
 					}
@@ -254,8 +251,6 @@ void MEF_updateState(uint8_t critico){
 			}
 		break;
 	}
-
-
 }
 
 //ATENCION!! LOS VALORES DE TEMPERATURA Y HUMEDAD DEBEN VENIR SOLO EN SU PARTE ENTERA: EL LCD NO MUESTRA PARTE DECIMAL
@@ -266,20 +261,14 @@ void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, 
 		break;
 
 		case REPORTE_COMPONENTES:
-			//LCD_sensoresActivos(sensores_activos);
-			LCD_limpiarPantalla();
-			LCD_pos_xy(0,1);			
-			LCD_write_string("Sensores activos");
+			LCD_sensoresActivos(sensores_activos);
 		break;
 
 		case REPORTE_VENTILADOR:
 			if (vent){
-				//LCD_menuMonitor(CRITICO, VENTILANDO, tempi, tempe, humi, hume);
-				LCD_limpiarPantalla();
-				LCD_pos_xy(0,1);			
-				LCD_write_string("Ventilacion");
+				LCD_menuMonitor(NORMAL, VENTILANDO, tempi, tempe, humi, hume);
 			} else{
-				//LCD_valores(tempi, tempe, humi, hume);
+				LCD_valores(tempi, tempe, humi, hume);
 			}
 		break;
 
@@ -326,7 +315,7 @@ void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, 
 		break;
 
 		case REPORTE_CONFIG:
-			LCD_menuConfigActual(CONFIG_get_desired_temp(), CONFIG_get_desired_hum(), &cel);
+			LCD_menuConfigActual(CONFIG_get_desired_temp(), CONFIG_get_desired_hum(), GPRS_get_dest_num());
 		break;
 	}
 
