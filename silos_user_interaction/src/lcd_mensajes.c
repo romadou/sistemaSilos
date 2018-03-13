@@ -5,9 +5,9 @@
  *      Author: Madou
  */
  
-#include "lcd_mensajes.h"
-#include "lcd.h"
-#include "string.h"
+#include " lcd_mensajes. h"
+#include " lcd.h "
+#include " string.h "
 
 /* Variables privadas */
 /* Formato de muestra de mensaje */
@@ -20,18 +20,19 @@ int pos = 0;
 /* Funciones privadas */
 void mostrarNormal(void); /* Visualización del mensaje "NORMAL" en la primera línea del LCD */
 void mostrarAlerta(void); /* Visualización del mensaje "ALERTA" en la primera línea del LCD */
+void mostrarSensoresActivos(int sensact); /* Visualización del mensaje "Sensores activos:" con su cantidad en la segunda línea del LCD */		//NO SE LLAMA EN NINGÚN LADO
 void mostrarProblemaTemperatura(void); /* Visualización del mensaje de problema de temperatura en la segunda línea del LCD */
 void mostrarProblemaHumedad(void); /* Visualización del mensaje de problema de humedad en la segunda línea del LCD */
 void mostrarProblemaVentilando(void); /* Visualización del mensaje de alerta de ventilación encendida en la segunda línea del LCD */
 void mostrarProblemaSensor(void); /* Visualización del mensaje de problema de desconexion del sensor en la segunda línea del LCD */
 void mostrarProblemaGPRS(void); /* Visualización del mensaje de problema de desconexion GPRS en la segunda línea del LCD */
-void mostrarProblemaVentilacion(void); /* Visualización del mensaje de alerta de ventilación no encendida en la segunda línea del LCD */
+void mostrarProblemaVentilacion(void); /* Visualización del mensaje de alerta de ventilación no funciona en la segunda línea del LCD */
 void mostrarProblemaTel_No_Conf(void); /* Visualización del mensaje de problema de no configuración de telefóno en la segunda línea del LCD */
 void mostrarProblemaTemp_No_Conf(void); /* Visualización del mensaje de problema de no configuración de temperatura en la segunda línea del LCD */ 
 void mostrarProblemaHum_No_Conf(void); /* Visualización del mensaje de problema de no configuración de humedad en la segunda línea del LCD */
 void mostrarProblemaCritico(void); /* Visualización del mensaje de alerta crítica en la segunda línea del LCD */
-void mostrarTemperaturaInterior(int tempi); /* Visualización del mensaje "T.I:" con su valor en la tercer línea del LCD */
-void mostrarTemperaturaExterior(int tempe); /* Visualización del mensaje "T.E:" con su valor en la tercer línea del LCD */
+void mostrarTemperaturaInterior(int tempi); /* Visualización del mensaje "T.I:" con su valor en la tercera línea del LCD */
+void mostrarTemperaturaExterior(int tempe); /* Visualización del mensaje "T.E:" con su valor en la tercera línea del LCD */
 void mostrarHumedadInterior(int humi); /* Visualización del mensaje "H.I:" con su valor en la cuarta línea del LCD */
 void mostrarHumedadExterior(int hume); /* Visualización del mensaje "H.E:" con su valor en la cuarta línea del LCD */
 void mostrarNumeral(void); /* Visualización del caracter numeral en el rincón derecho inferior del LCD */
@@ -86,29 +87,40 @@ void LCD_estado(estado e, problema p){
 	//Segunda línea
 	LCD_limpiarLinea(1);
 	switch (p){
-		case TEMPERATURA : 	mostrarProblemaTemperatura();
-							break;
-		case HUMEDAD : 	mostrarProblemaHumedad();
-						break;
-		case VENTILANDO : 	mostrarProblemaVentilando();
-							break;
-		case SENSOR : 	mostrarProblemaSensor();
-						break;
-		case GPRS : 	mostrarProblemaGPRS();
-						break;
-		case VENTILACION : 	mostrarProblemaVentilacion();
-							break;
-		case TEL_NO_CONF :	mostrarProblemaTel_No_Conf();
-							break;
-		case TEMP_NO_CONF : mostrarProblemaTemp_No_Conf();
-							break;
-		case HUM_NO_CONF : 	mostrarProblemaHum_No_Conf();
-							break;
-		case CRITICO : 	mostrarProblemaCritico();
-						break;
+		case TEMPERATURA : 	
+			mostrarProblemaTemperatura();
+		break;
+		case HUMEDAD : 	
+			mostrarProblemaHumedad();
+		break;
+		case VENTILANDO : 	
+			mostrarProblemaVentilando();
+		break;
+		case SENSOR : 	
+			mostrarProblemaSensor();
+		break;
+		case GPRS : 
+			mostrarProblemaGPRS();
+		break;
+		case VENTILACION : 	
+			mostrarProblemaVentilacion();
+		break;
+		case TEL_NO_CONF :	
+			mostrarProblemaTel_No_Conf();
+		break;
+		case TEMP_NO_CONF : 
+			mostrarProblemaTemp_No_Conf();
+		break;
+		case HUM_NO_CONF : 	
+			mostrarProblemaHum_No_Conf();
+		break;
+		case CRITICO : 	
+			mostrarProblemaCritico();
+		break;
 		case OK : 	
-		default:	LCD_limpiarLinea(1);
-					break;
+		default:	
+			LCD_limpiarLinea(1);
+		break;
 	}
 
 	// Final de display
@@ -138,29 +150,40 @@ void LCD_menuMonitor(estado e, problema p, int tempi, int tempe, int humi, int h
 
 	// Segunda línea
 	switch (p){
-		case TEMPERATURA : 	mostrarProblemaTemperatura();
-							break;
-		case HUMEDAD : 	mostrarProblemaHumedad();
-						break;
-		case VENTILANDO : 	mostrarProblemaVentilando();
-							break;
-		case SENSOR : 	mostrarProblemaSensor();
-						break;
-		case GPRS : 	mostrarProblemaGPRS();
-						break;
-		case VENTILACION : 	mostrarProblemaVentilacion();
-							break;
-		case TEL_NO_CONF :	mostrarProblemaTel_No_Conf();
-							break;
-		case TEMP_NO_CONF : mostrarProblemaTemp_No_Conf();
-							break;
-		case HUM_NO_CONF : 	mostrarProblemaHum_No_Conf();
-							break;
-		case CRITICO : 	mostrarProblemaCritico();
-						break;
+		case TEMPERATURA : 	
+			mostrarProblemaTemperatura();
+		break;
+		case HUMEDAD : 	
+			mostrarProblemaHumedad();
+		break;
+		case VENTILANDO : 	
+			mostrarProblemaVentilando();
+		break;
+		case SENSOR : 	
+			mostrarProblemaSensor();
+		break;
+		case GPRS : 	
+			mostrarProblemaGPRS();
+		break;
+		case VENTILACION : 	
+			mostrarProblemaVentilacion();
+		break;
+		case TEL_NO_CONF :	
+			mostrarProblemaTel_No_Conf();
+		break;
+		case TEMP_NO_CONF : 
+			mostrarProblemaTemp_No_Conf();
+		break;
+		case HUM_NO_CONF : 	
+			mostrarProblemaHum_No_Conf();
+		break;
+		case CRITICO : 	
+			mostrarProblemaCritico();
+		break;
 		case OK : 	
-		default:	LCD_limpiarLinea(1);
-					break;
+		default:	
+			LCD_limpiarLinea(1);
+		break;
 	}
 
 	// Tercer y Cuarta línea
@@ -179,18 +202,18 @@ void LCD_menuConfiguracion(configurable c){
 	LCD_pos_xy(6,0);
 	LCD_write_string(pantallaMensaje);
 	switch(c){
-		case TELEFONO : 
-						strcpy(pantallaMensaje, "nro de telefono");
-						LCD_pos_xy(2,1);
-						break;
-		case TEMP: 	
-							strcpy(pantallaMensaje, "temperatura");
-							LCD_pos_xy(4,1);
-							break;
+		case TEL : 
+			strcpy(pantallaMensaje, "nro de telefono");
+			LCD_pos_xy(2,1);
+		break;
+		case TEMP : 	
+			strcpy(pantallaMensaje, "temperatura");
+			LCD_pos_xy(4,1);
+		break;
 		case HUM : 	
-						strcpy(pantallaMensaje, "humedad");
-						LCD_pos_xy(6,1);
-						break;
+			strcpy(pantallaMensaje, "humedad");
+			LCD_pos_xy(6,1);
+		break;
 		default : ;
 	}
 	LCD_write_string(pantallaMensaje);
@@ -260,14 +283,6 @@ void LCD_menuConfigActual(int temp, int hum, char* tel){
 	mostrarNumeral();
 }
 
-void LCD_sensoresActivos(int sensores_activos){
-	LCD_limpiarLinea(0);
-	LCD_pos_xy(0,0);
-	strcpy(pantallaMensaje, "Sensores activos: ");
-	numASCII(sensores_activos);
-	LCD_write_string(valor);
-}
-
 void LCD_limpiarLinea(int l){
 	if (l < MAX_Y){
 		strcpy(pantallaMensaje, "                    ");
@@ -321,6 +336,14 @@ void mostrarAlerta(void){
 	strcpy(pantallaMensaje, "ALERTA");
 	LCD_pos_xy(7,0);
 	LCD_write_string(pantallaMensaje);
+}
+
+void mostrarSensoresActivos(int sensores_activos){
+	LCD_limpiarLinea(1);
+	LCD_pos_xy(0,1);
+	strcpy(pantallaMensaje, "Sensores activos: ");
+	numASCII(sensores_activos);
+	LCD_write_string(valor);
 }
 
 void mostrarProblemaTemperatura(void){
