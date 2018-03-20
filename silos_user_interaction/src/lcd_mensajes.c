@@ -321,9 +321,11 @@ void numASCII(int num){
 			valor[1] = '0' + num;
 			valor[2] = '\0';
 		}
-		num = num % 10;
-		valor[0] = '0' + num;
-		valor[1] = '\0';
+		else{
+			num = num % 10;
+			valor[0] = '0' + num;
+			valor[1] = '\0';
+		}
 	}
 }
 
