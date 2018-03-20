@@ -5,9 +5,9 @@
  *      Author: Madou
  */
  
-#include " lcd_mensajes.h "
-#include " lcd.h "
-#include " string.h "
+#include "lcd_mensajes.h"
+#include "lcd.h"
+#include "string.h"
 
 /* Variables privadas */
 /* Formato de muestra de mensaje */
@@ -20,7 +20,6 @@ int pos = 0;
 /* Funciones privadas */
 void mostrarNormal(void); /* Visualización del mensaje "NORMAL" en la primera línea del LCD */
 void mostrarAlerta(void); /* Visualización del mensaje "ALERTA" en la primera línea del LCD */
-void mostrarSensoresActivos(int sensact); /* Visualización del mensaje "Sensores activos:" con su cantidad en la segunda línea del LCD */		//NO SE LLAMA EN NINGÚN LADO
 void mostrarProblemaTemperatura(void); /* Visualización del mensaje de problema de temperatura en la segunda línea del LCD */
 void mostrarProblemaHumedad(void); /* Visualización del mensaje de problema de humedad en la segunda línea del LCD */
 void mostrarProblemaVentilando(void); /* Visualización del mensaje de alerta de ventilación encendida en la segunda línea del LCD */
@@ -125,6 +124,14 @@ void LCD_estado(estado e, problema p){
 
 	// Final de display
 	mostrarNumeral();
+}
+
+void LCD_sensoresActivos(int sensores_activos){
+	LCD_limpiarLinea(1);
+	LCD_pos_xy(0,1);
+	strcpy(pantallaMensaje, "Sensores activos: ");
+	numASCII(sensores_activos);
+	LCD_write_string(valor);
 }
 
 void LCD_valores(int tempi, int tempe, int humi, int hume){
@@ -267,17 +274,17 @@ void LCD_menuConfigActual(int temp, int hum, char* tel){
 	LCD_pos_xy(3,0);
 	LCD_write_string(pantallaMensaje);
 	strcpy(pantallaMensaje, "Temp: ");
-	LCD_pos_xy(2,0);
+	LCD_pos_xy(2,1);
 	LCD_write_string(pantallaMensaje);
 	numASCII(temp);
 	LCD_write_string(valor);
 	strcpy(pantallaMensaje, "Hum: ");
-	LCD_pos_xy(2,0);
+	LCD_pos_xy(2,2);
 	LCD_write_string(pantallaMensaje);
 	numASCII(hum);
 	LCD_write_string(valor);
 	strcpy(pantallaMensaje, "Tel: ");
-	LCD_pos_xy(2,0);
+	LCD_pos_xy(2,3);
 	LCD_write_string(pantallaMensaje);
 	LCD_write_string(tel);
 	mostrarNumeral();
@@ -339,14 +346,6 @@ void mostrarAlerta(void){
 	LCD_write_string(pantallaMensaje);
 }
 
-void mostrarSensoresActivos(int sensores_activos){
-	LCD_limpiarLinea(1);
-	LCD_pos_xy(0,1);
-	strcpy(pantallaMensaje, "Sensores activos: ");
-	numASCII(sensores_activos);
-	LCD_write_string(valor);
-}
-
 void mostrarProblemaTemperatura(void){
 	strcpy(pantallaMensaje, "Temp alta");
 	LCD_pos_xy(5,1);
@@ -403,7 +402,7 @@ void mostrarTemperaturaInterior(int tempi){
 	LCD_pos_xy(1,2);
 	LCD_write_string(pantallaMensaje);
 	if (tempe == 255){
-		valor = "XX";	
+		strcpy(valor, "XX");	
 	}
 	else{
 		numASCII(tempi);
@@ -415,7 +414,7 @@ void mostrarTemperaturaExterior(int tempe){
 	LCD_pos_xy(11,2);
 	LCD_write_string(pantallaMensaje);
 	if (tempe == 255){
-		valor = "XX";	
+		strcpy(valor, "XX");	
 	}
 	else{
 		numASCII(tempe);
@@ -427,7 +426,7 @@ void mostrarHumedadInterior(int humi){
 	LCD_pos_xy(1,3);
 	LCD_write_string(pantallaMensaje);
 	if (tempe == 255){
-		valor = "XX";	
+		strcpy(valor, "XX");	
 	}
 	else{
 		numASCII(humi);
@@ -439,7 +438,7 @@ void mostrarHumedadExterior(int hume){
 	LCD_pos_xy(11,3);
 	LCD_write_string(pantallaMensaje);
 	if (tempe == 255){
-		valor = "XX";	
+		strcpy(valor, "XX");	
 	}
 	else{
 		numASCII(hume);
