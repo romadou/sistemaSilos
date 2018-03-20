@@ -2,7 +2,7 @@
 #define GPRS_H_
 
 #ifndef BAUD_RATE
-#define BAUD_RATE 9600
+#define BAUD_RATE 38400
 #endif
 
 void GPRS_config(void);
