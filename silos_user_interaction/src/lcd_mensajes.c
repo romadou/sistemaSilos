@@ -322,7 +322,6 @@ void numASCII(int num){
 			valor[2] = '\0';
 		}
 		else{
-			num = num % 10;
 			valor[0] = '0' + num;
 			valor[1] = '\0';
 		}
@@ -403,28 +402,48 @@ void mostrarTemperaturaInterior(int tempi){
 	strcpy(pantallaMensaje, "T.I: ");
 	LCD_pos_xy(1,2);
 	LCD_write_string(pantallaMensaje);
-	numASCII(tempi);
+	if (tempe == 255){
+		valor = "XX";	
+	}
+	else{
+		numASCII(tempi);
+	}
 	LCD_write_string(valor);
 }
 void mostrarTemperaturaExterior(int tempe){
 	strcpy(pantallaMensaje, "T.E: ");
 	LCD_pos_xy(11,2);
 	LCD_write_string(pantallaMensaje);
-	numASCII(tempe);
-	LCD_write_string(valor);	
+	if (tempe == 255){
+		valor = "XX";	
+	}
+	else{
+		numASCII(tempe);
+	}
+	LCD_write_string(valor);
 }
 void mostrarHumedadInterior(int humi){
 	strcpy(pantallaMensaje, "H.I: ");
 	LCD_pos_xy(1,3);
 	LCD_write_string(pantallaMensaje);
-	numASCII(humi);
+	if (tempe == 255){
+		valor = "XX";	
+	}
+	else{
+		numASCII(humi);
+	}
 	LCD_write_string(valor);
 }
 void mostrarHumedadExterior(int hume){
 	strcpy(pantallaMensaje, "H.E: ");
 	LCD_pos_xy(11,3);
 	LCD_write_string(pantallaMensaje);
-	numASCII(hume);
+	if (tempe == 255){
+		valor = "XX";	
+	}
+	else{
+		numASCII(hume);
+	}
 	LCD_write_string(valor);
 }
 
