@@ -23,6 +23,7 @@ typedef enum {TEL, TEMP, HUM} configurable;
 void LCD_menuBienvenida(void); /* Configuración inicial del display y  menu con mensaje de bienvenida */
 void LCD_menuOpciones(void); /* Menu de opciones a otros menus */
 void LCD_estado(estado e, problema p); /* Actualización de los mensajes de estado del sistema */
+void mostrarSensoresActivos(int sensact); /* Visualización del mensaje "Sensores activos:" con su cantidad en la segunda línea del LCD */
 void LCD_valores(int tempi, int tempe, int humi, int hume); /* Actualización de los valores de temperatura y humedad */
 void LCD_menuMonitor(estado e, problema p, int tempi, int tempe, int humi, int hume); /* Menu formado por el estado del sistema y los valores de temperatura y humedad */
 void LCD_menuConfiguracion(configurable c); /* Menu de pedido de configuración */
