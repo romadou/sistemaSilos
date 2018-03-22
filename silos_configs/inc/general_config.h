@@ -47,9 +47,8 @@
 
 void CONFIG_init(void);
 int CONFIG_get_desired_temp(void);
-int CONFIG_set_desired_temp(int desired_temp);
-int CONFIG_check_temp(int temp_in, int temp_out);
+int CONFIG_set_desired_temp(int new_temp);
 int CONFIG_get_desired_hum(void);
-int CONFIG_set_desired_hum(int desired_hum);
+int CONFIG_set_desired_hum(int new_hum);
 
 #endif

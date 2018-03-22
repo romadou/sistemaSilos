@@ -7,8 +7,8 @@
 #include <string.h>
 
 
-char src_number[10] = "2215410495";
-char dest_number[10] = "2314401890";
+char src_number[11] = "2215410495";
+char dest_number[11] = "2314401890";
 
 //Regenerar PDU: Por ahora dice "testing"
 char length_alert_PDU = 20;
@@ -94,7 +94,7 @@ void GPRS_alerta(void){
    while( uartReadByte( UART_232, &dato ) ){
       uartWriteByte( UART_USB, dato );
    }
-   uartWriteString( UART_232, "769F01\x1A")
+   uartWriteString( UART_232, "769F01\x1A");
    while( uartReadByte( UART_232, &dato ) ){
       uartWriteByte( UART_USB, dato );
    }
