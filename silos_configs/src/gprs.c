@@ -166,7 +166,8 @@ void GPRS_set_dest_num(char *dest_num){
 }
 
 char* GPRS_get_dest_num(void){
-   char dest_aux[10];
+   char dest_aux[11];
    strcpy(dest_aux, dest_number);
+   dest_aux[10] = '\0';
    return dest_aux;
 }

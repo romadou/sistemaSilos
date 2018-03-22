@@ -1,2 +1,0 @@
-Config::
-	lógica temp + hum (no más en config -> va en actuación, ver con Delfina)
