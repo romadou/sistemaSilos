@@ -9,6 +9,7 @@
 
 //char src_number[11] = "2215410495";
 char dest_number[11] = "2314401890";
+char dest_aux[11] = "";
 
 //Regenerar PDU: Por ahora dice "testing"
 char length_alert_PDU = 20;
@@ -166,7 +167,6 @@ void GPRS_set_dest_num(char *dest_num){
 }
 
 char* GPRS_get_dest_num(void){
-   char dest_aux[11];
    strcpy(dest_aux, dest_number);
    return dest_aux;
 }
