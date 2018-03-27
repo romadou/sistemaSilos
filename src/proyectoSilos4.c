@@ -5,11 +5,9 @@
  *===========================================================================*/
 
 /*==================[inlcusiones]============================================*/
-
-//#include "blinky.h"   // <= own header (optional)
+#include "proyectoSilos4.h"
 #include "sapi.h"        // <= sAPI header
 #include "os.h"       // <= freeOSEK
-#include "proyectoSilos4.h"
 #include "MEF.h"
 #include "VENTILACION.h"
 #include "keypad.h"
@@ -19,6 +17,8 @@
 #include "testTabla.h"
 #include "math.h"
 #include "general_config.h"
+#include "PMM_sensores.h"
+#include "gprs.h"
 
 
 /*==================[definiciones y macros]==================================*/
@@ -34,10 +34,11 @@ uint8_t temperatureE;
 uint8_t humidityE;
 uint8_t desiredTemp;
 uint8_t fan;
-uint8_t buffer[8];
+uint8_t buffer[7];
 uint8_t posBuffer;
 uint8_t indice;
 uint8_t dato;
+static uint8_t ACT_ID;
 
 
 /*==================[definiciones de datos externos]=========================*/
@@ -49,6 +50,8 @@ Por cada esclavo:
 	si estuvo inactivo 30 veces seguidas, indica que hay esclavos inactivos
 **/
 void processData (void);
+void processActives (void);
+void info (void);
 
 /*==================[declaraciones de funciones externas]====================*/
 
@@ -60,8 +63,7 @@ int main( void )
    // ---------- CONFIGURACIONES ------------------------------
    // Inicializar y configurar la plataforma
    boardConfig();
-   uartConfig(0,9600);
-   uartEnableRxInterrupt(4);
+   PMM_init();
    // ---------- INICIAR SISTEMA OPERATIVO --------------------
 	// Starts the operating system in the Application Mode 1
 	// This example has only one Application Mode
@@ -95,12 +97,11 @@ TASK (InitTask){
 	CONFIG_init();
 	SetRelAlarm(ActivateKeypadTask, 1000, 100);
 	SetRelAlarm(ActivateRefreshDisplayTask, 1000, 500);
-	SetRelAlarm(ActivateDetectActiveSlavesTask, 1000, 6000);
+	SetRelAlarm(ActivateDetectActiveSlavesTask, 1000, 2000);
 	TerminateTask();
 }
 
 TASK(KeypadTask){
-	gpioToggle( LED3 );
 	KEYPAD_ScanAutorepeat(&key);
 	TerminateTask();
 }
@@ -109,57 +110,138 @@ TASK(RefreshDisplayTask){
 	if(!KEYPAD_getkey(&key)){
 		key='s';
 	}
+
 	MEF_updateState(0);
-	MEF_updateOutput(temperatureI,temperatureE,humidityI,humidityE,activeSlaves,fan);
+	MEF_updateOutput(temperatureI,temperatureE,humidityI,humidityE,activeSlaves,inactiveSlaves,fan);
 	TerminateTask();
 
 }
 TASK(DetectActiveSlavesTask){
-	gpioToggle( LED1 );	
+	ACT_ID=4;
+	EventMaskType Events;	
+	uint8_t package[3];
+	uint8_t id;
+	
+	for(id=1; id<MAXSLAVES+1; id++){
+		PMM_setPaq(id,0x0A, package);
+		uartWriteString(UART_RS485, package);
+		SetRelAlarm(SetWatchDogDetectEvent, 12,0);
+		WaitEvent(receiveInterruptEvent | WatchDogEvent);
+		GetEvent(DetectActiveSlavesTask, &Events);
+		if(Events & receiveInterruptEvent){ //se recibió interrupción
+			CancelAlarm(SetWatchDogDetectEvent);	
+			if(PMM_verify(buffer, id)==1){
+				slaves[id][C_STATE]=ACTIVE;
+				if(slaves[id][C_INACTIVE]>=MAX_INACTIVE)
+					slaves[id][C_INACTIVE]=0;
+			}
+			else{
+				//ESTO
+				slaves[id][C_STATE]=INACTIVE;
+				slaves[id][C_INACTIVE]++;
+			}
+		}
+		else{
+			slaves[id][C_STATE]=INACTIVE;
+			slaves[id][C_INACTIVE]++;
+		}
+		ClearEvent(Events);
+	}
+	
+
 	ActivateTask(TakeDataSlavesTask);
 	TerminateTask();
 
 
 }
 TASK(TakeDataSlavesTask){
-	gpioToggle( LEDR );	
+	ACT_ID=5;
+	EventMaskType Events;
+	uint8_t package[3];
+	uint8_t id;
+	processActives();
+	for(id=1; id<MAXSLAVES+1; id++){
+		if(slaves[id][C_STATE]==ACTIVE){
+			PMM_setPaq(id,0x1E, package);
+			uartWriteString(UART_RS485, package);
+			SetRelAlarm(SetWatchDogTakeDataEvent, 12,0);
+			WaitEvent(receiveInterruptEvent | WatchDogEvent);
+			GetEvent(TakeDataSlavesTask, &Events);
+			if(Events & receiveInterruptEvent){ //se recibió interrupción
+				CancelAlarm(SetWatchDogTakeDataEvent);
+				PMM_getData(buffer,id, &slaves[id][C_TEMP], &slaves[id][C_HUM]);
+			}
+			ClearEvent(Events);
+		}	
+	}
+	//ingresarDatos();
 	ActivateTask(ActionTask);
 	TerminateTask();
 
 }
 TASK(ActionTask){
-	gpioToggle( LEDB );	
+	gpioToggle(LED3);
 	processData();
-	if(VENTILACION_actuar(temperatureI, temperatureE, humidityI, humidityE, CONFIG_get_desired_temp()))
+		if(VENTILACION_actuar(temperatureI, temperatureE, humidityI, humidityE, CONFIG_get_desired_temp()))
 		fan=1;
 	else
 		fan=0;
+		
+
+	
+	if(temperatureI>=TEMP_ALERTA){
+		gpioToggle(LED1);
+		//GPRS_critico();
+	}
+	if(inactiveSlaves){
+		gpioToggle(LED2);
+		//GPRS_alerta();
+	}
+	
 	TerminateTask();
 
 }
 //rutina de interrupción utilizada para la primer prueba de recepción de byte
 ISR (UART_RS485_IRQHandler){
-	/**
-	uartReceiveByte(4, &dato);
-	saveInBuffer(dato);
-	**/
+	if(ACT_ID==4)
+		SetEvent(DetectActiveSlavesTask, receiveInterruptEvent);
+	else
+		if(ACT_ID==5)
+			SetEvent(TakeDataSlavesTask, receiveInterruptEvent);
+	info();
 }
 /*==================[definiciones de funciones internas]=====================*/
 
+//Las variables cantInactiveSlaves, inactiveSlaves, activeSlaves se deberían revisar.
+//Como solución se planteo esto para salir del apuro. Pero podría estar mejor.
+void processActives (void){
+	uint8_t i;
+	uint8_t cantInactiveSlaves=0;
+	activeSlaves=0;
+	for(i=1; i<MAXSLAVES+1; i++){ //el esclavo 1 está en el exterior, por eso no se incluye en el promedio.
+		if(slaves[i][C_STATE]==ACTIVE){ //está activo
+			activeSlaves++;
+		}
+		if(slaves[i][C_INACTIVE]>=MAX_INACTIVE)
+			cantInactiveSlaves++; //en principio solo se notifica que hay al menos 1 inactivo, lo mejor sería indicar cual/es
+	}
+	if(cantInactiveSlaves>(MAXSLAVES-CANT_SLAVES))
+		inactiveSlaves=1;
+	else
+		inactiveSlaves=0;
+
+}
 
 void processData (void){
 	uint8_t i;
 	float tempAux, humAux;
 	unsigned short totalHum=0, totalTemp=0;
-	activeSlaves=0;
-	for(i=1; i<MAXSLAVES; i++){ //el esclavo 0 está en el exterior, por eso no se incluye en el promedio.
+	for(i=2; i<MAXSLAVES+1; i++){ //el esclavo 1 está en el exterior, por eso no se incluye en el promedio.
 		if(slaves[i][C_STATE]==ACTIVE){ //está activo
-			activeSlaves++;
 			totalTemp=totalTemp + slaves[i][C_TEMP];
 			totalHum=totalHum + slaves[i][C_HUM];
 		}
-		if(slaves[i][C_INACTIVE]>=MAX_INACTIVE)
-			inactiveSlaves=1; //en principio solo se notifica que hay al menos 1 inactivo, lo mejor sería indicar cual/es
+
 		
 	}
 	if(activeSlaves>0){ //si no hay esclavos activos no tiene sentido hacer el promedio
@@ -179,10 +261,9 @@ void processData (void){
 		temperatureI=255; //momentaneo. Lo ideal sería mostrar en pantalla 'XX'
 		humidityI=255;
 	}
-	if(slaves[0][0]==ACTIVE){ //Esclavo exterior
-	activeSlaves++;
-	temperatureE=slaves[0][2];
-	humidityE=slaves[0][3];
+	if(slaves[1][C_STATE]==ACTIVE){ //Esclavo exterior
+		temperatureE=slaves[1][C_TEMP];
+		humidityE=slaves[1][C_HUM];
 	}
 	else{ 
 		/*Si el sensor exterior no funciona el sistema no funciona
@@ -194,7 +275,14 @@ void processData (void){
 
 }
 
+void info(void){
+	int32_t message_length=0;
+	while (Chip_UART_ReadLineStatus(LPC_USART0) & UART_LSR_RDR) {
+      buffer[message_length++] = Chip_UART_ReadByte(LPC_USART0);
+   }
 
+
+}
 
 /*==================[definiciones de funciones externas]=====================*/
 

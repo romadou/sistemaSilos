@@ -1,4 +1,3 @@
-#include "general_config.h"
 #include "tipos.h"
 #include "MEF.h"
 #include "lcd_mensajes.h"
@@ -8,11 +7,15 @@
 #include "keypad.h"
 #include "math.h"
 #include "stdio.h"
+#include "general_config.h"
+#include "stdlib.h"
+
 
 
 
 typedef enum {DEFAULT, REPORTE_COMPONENTES, REPORTE_VENTILADOR, CANCELADO, CRITIC, MENU, REPORTE_CONFIG, CONFIG_TEMPERATURA, CONFIG_HUMEDAD,ERROR_TEMP, TEMPERATURA_INGRESADA, HUMEDAD_INGRESADA, ERROR_HUM, CONFIG_CELULAR, NUMERO_INGRESADO} state;
 static state currentState;
+static state previousState;
 
 static uint8_t stateTimeout;
 extern uint8_t key;
@@ -22,7 +25,7 @@ Devuelve 1 si alcanzó el timeout, 0 en caso contrario
 */
 uint8_t timeout(void);
 
-static uint8_t input_buffer[10];
+static uint8_t input_buffer[11];
 
 /* Representa la cantidad de datos que ya fueron ingresados*/
 static uint8_t loaded_input;
@@ -37,6 +40,7 @@ void MEF_Init(){
  }
 
 void MEF_updateState(uint8_t critico){
+	previousState=currentState;
 	switch(currentState){
 		case DEFAULT:
 			if (critico){
@@ -61,9 +65,15 @@ void MEF_updateState(uint8_t critico){
 				stateTimeout=8;
 				currentState=CRITIC;
 			} else{
-				if(timeout()){
-					stateTimeout=8;
-					currentState=REPORTE_VENTILADOR;
+				if(key=='#'){
+					stateTimeout=16;
+					currentState=MENU;
+				}
+				else{
+					if(timeout()){
+						stateTimeout=8;
+						currentState=REPORTE_VENTILADOR;
+					}
 				}
 			}
 		break;
@@ -72,9 +82,17 @@ void MEF_updateState(uint8_t critico){
 			if (critico){
 				stateTimeout=8;
 				currentState=CRITIC;
-			} else if(timeout()){
-				stateTimeout=16;
-				currentState=DEFAULT;
+			} else{
+				if(key=='#'){
+					stateTimeout=16;
+					currentState=MENU;
+				}
+				else{
+					if(timeout()){
+						stateTimeout=16;
+						currentState=DEFAULT;
+					}
+				}
 			}
 		break;
 
@@ -85,15 +103,15 @@ void MEF_updateState(uint8_t critico){
 					currentState=DEFAULT;
 				break;
 				case '2':
-					stateTimeout=8;
+					stateTimeout=32;
 					currentState=REPORTE_CONFIG;
 				break;
 				case '3':
-					stateTimeout=16;
+					stateTimeout=32;
 					currentState=CONFIG_TEMPERATURA;
 				break;
 				case '4':
-					stateTimeout=16;
+					stateTimeout=32;
 					currentState=CONFIG_CELULAR;
 				break;
 			}
@@ -116,6 +134,7 @@ void MEF_updateState(uint8_t critico){
 			switch(key){
 				case '*':
 					stateTimeout=8;
+					input_buffer[loaded_input]='\0';
 					if (CONFIG_set_desired_temp(atoi(input_buffer)) == TEMP_SET_OK){
 						currentState=TEMPERATURA_INGRESADA;
 					} else{
@@ -131,9 +150,11 @@ void MEF_updateState(uint8_t critico){
 				case NOT_PRESSED:
 				break;
 				default:
-					stateTimeout=8;
+					stateTimeout=16;
 					if (KEYPAD_numero(key) && loaded_input<4 && (loaded_input>0 || key !='0')){
 						input_buffer[loaded_input++]=key;
+						LCD_pos_xy(8+loaded_input,2);
+						LCD_write_char(key);
 					}
 				break;
 			}
@@ -147,6 +168,7 @@ void MEF_updateState(uint8_t critico){
 			switch(key){
 				case '*':
 					stateTimeout=8;
+					input_buffer[loaded_input]='\0';
 					
 					if (CONFIG_set_desired_hum(atoi(input_buffer)) == HUM_SET_OK){
 						currentState=HUMEDAD_INGRESADA;
@@ -154,6 +176,7 @@ void MEF_updateState(uint8_t critico){
 						currentState=ERROR_HUM;
 					}
 					loaded_input=0;
+					
 					
 				break;
 				case '#':
@@ -164,9 +187,11 @@ void MEF_updateState(uint8_t critico){
 				case NOT_PRESSED:
 				break;
 				default:
-					stateTimeout=8;
+					stateTimeout=16;
 					if (KEYPAD_numero(key) && loaded_input<4 && (loaded_input>0 || key !='0')){
 						input_buffer[loaded_input++]=key;
+						LCD_pos_xy(8+loaded_input,2);
+						LCD_write_char(key);
 					}
 				break;
 			}
@@ -181,7 +206,8 @@ void MEF_updateState(uint8_t critico){
 				case '*':
 					stateTimeout=8;
 					if (loaded_input==10){
-						GPRS_set_dest_num();
+						input_buffer[loaded_input]='\0';
+						GPRS_set_dest_num(input_buffer);
 						currentState=NUMERO_INGRESADO;
 						loaded_input=0;
 					}
@@ -194,14 +220,16 @@ void MEF_updateState(uint8_t critico){
 				case NOT_PRESSED:
 				break;
 				default:
-					stateTimeout=8;
+					stateTimeout=16;
 					if (KEYPAD_numero(key) && loaded_input<10 && (loaded_input>0 || key !='0')){
 						input_buffer[loaded_input++]=key;
+						LCD_pos_xy(3+loaded_input,2);
+						LCD_write_char(key);
 					}
 				break;
 			}
 			if(timeout()){
-				stateTimeout=16;
+				stateTimeout=32;
 				loaded_input=0;
 				currentState=MENU;
 			}
@@ -211,6 +239,11 @@ void MEF_updateState(uint8_t critico){
 				stateTimeout=16;
 				currentState=DEFAULT;
 			}
+			else
+				if(key=='#'){
+					stateTimeout=16;
+					currentState=MENU;
+				}
 		break;
 		case CANCELADO:
 			if (timeout()){
@@ -254,70 +287,79 @@ void MEF_updateState(uint8_t critico){
 }
 
 //ATENCION!! LOS VALORES DE TEMPERATURA Y HUMEDAD DEBEN VENIR SOLO EN SU PARTE ENTERA: EL LCD NO MUESTRA PARTE DECIMAL
-void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, uint8_t sensores_activos, uint8_t vent){
-	switch(currentState){
-		case DEFAULT:
-			LCD_menuMonitor(NORMAL, OK, tempi, tempe, humi, hume);
-		break;
+void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, uint8_t sensores_activos, uint8_t sensorCaido, uint8_t vent){
+	if(currentState!=previousState){
+		switch(currentState){
+			case DEFAULT:
+				if(sensorCaido)
+					LCD_menuMonitor(ALERTA, SENSOR, tempi, tempe, humi, hume);
+				else
+					LCD_menuMonitor(NORMAL, OK, tempi, tempe, humi, hume);
+			break;
 
-		case REPORTE_COMPONENTES:
-			LCD_sensoresActivos(sensores_activos);
-		break;
+			case REPORTE_COMPONENTES:
+				LCD_sensoresActivos(sensores_activos);
+			break;
 
-		case REPORTE_VENTILADOR:
-			if (vent){
-				LCD_menuMonitor(NORMAL, VENTILANDO, tempi, tempe, humi, hume);
-			} else{
-				LCD_valores(tempi, tempe, humi, hume);
-			}
-		break;
+			case REPORTE_VENTILADOR:
+				if (vent){
+					if(sensorCaido)
+						LCD_menuMonitor(ALERTA, VENTILANDO, tempi, tempe, humi, hume);
+					else
+						LCD_menuMonitor(NORMAL, VENTILANDO, tempi, tempe, humi, hume);
+				} else{
+					LCD_valores(tempi, tempe, humi, hume);
+				}
+			break;
 
-		case CRITIC:
-			LCD_menuMonitor(ALERTA, CRITICO, tempi, tempe, humi, hume);
-		break;
+			case CRITIC:
+				LCD_menuMonitor(ALERTA, CRITICO, tempi, tempe, humi, hume);
+			break;
 
-		case MENU:
-			LCD_menuOpciones();
-		break;
+			case MENU:
+				LCD_menuOpciones();
+			break;
 
-		case CONFIG_TEMPERATURA:
-			LCD_menuConfiguracion(TEMP);
-		break;
+			case CONFIG_TEMPERATURA:
+				LCD_menuConfiguracion(TEMP);
+			break;
 
-		case ERROR_TEMP:
-			LCD_configErrorNum();
-		break;
+			case ERROR_TEMP:
+				LCD_configErrorNum();
+			break;
 
-		case TEMPERATURA_INGRESADA:
-			LCD_configConfirmarNum();
-		break;
-		case CONFIG_HUMEDAD:
-			LCD_menuConfiguracion(HUM);
-		break;
-		case ERROR_HUM:
-			LCD_configErrorNum();
-		break;
+			case TEMPERATURA_INGRESADA:
+				LCD_configConfirmarNum();
+			break;
+			case CONFIG_HUMEDAD:
+				LCD_menuConfiguracion(HUM);
+			break;
+			case ERROR_HUM:
+				LCD_configErrorNum();
+			break;
 
-		case HUMEDAD_INGRESADA:
-			LCD_configConfirmarNum();
-		break;
+			case HUMEDAD_INGRESADA:
+				LCD_configConfirmarNum();
+			break;
 
-		case CONFIG_CELULAR:
-			LCD_menuConfiguracion(TELEFONO);
-		break;
+			case CONFIG_CELULAR:
+				LCD_menuConfiguracion(TEL);
+			break;
 
-		case NUMERO_INGRESADO:
-			LCD_configConfirmarNum();
-		break;
+			case NUMERO_INGRESADO:
+				LCD_configConfirmarNum();
+			break;
 
-		case CANCELADO:
-			LCD_configEliminarNum();
-		break;
+			case CANCELADO:
+				LCD_configEliminarNum();
+			break;
 
-		case REPORTE_CONFIG:
-			LCD_menuConfigActual(CONFIG_get_desired_temp(), CONFIG_get_desired_hum(), GPRS_get_dest_num());
-		break;
+			case REPORTE_CONFIG:
+				LCD_menuConfigActual(CONFIG_get_desired_temp(), CONFIG_get_desired_hum(), GPRS_get_dest_num());
+			break;
 	}
+	}
+
 
 }
 /*
@@ -330,7 +372,7 @@ uint8_t timeout(void){
 	else
 		return 0;
 }
-/**
+
 int buffer_to_int(void){
 	uint8_t index;
 	int aux=0;
@@ -339,4 +381,3 @@ int buffer_to_int(void){
 	}
 	return aux;
 }
-**/
