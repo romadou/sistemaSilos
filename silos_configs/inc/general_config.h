@@ -2,23 +2,19 @@
 #define _GENERAL_CONFIG_H
 
 #ifndef TEMP_MAX
-#define TEMP_MAX 8000
+#define TEMP_MAX 80
 #endif
 
 #ifndef TEMP_MIN
-#define TEMP_MIN -400
+#define TEMP_MIN 0
 #endif
 
 #ifndef HUM_MAX
-#define HUM_MAX 1000
+#define HUM_MAX 100
 #endif
 
 #ifndef HUM_MIN
 #define HUM_MIN 0
-#endif
-
-#ifndef TEMP_SET_OK
-#define TEMP_SET_OK 0
 #endif
 
 #ifndef TEMP_SET_OK
