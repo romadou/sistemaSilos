@@ -16,6 +16,8 @@ char pantallaMensaje[MAX_X];
 char valor[4];
 /* Posición del valor numérico ingresado */
 int pos = 0;
+/* Referencia al valor numérico ingresado */
+configurable cb;
 
 /* Funciones privadas */
 void mostrarNormal(void); /* Visualización del mensaje "NORMAL" en la primera línea del LCD */
@@ -227,12 +229,46 @@ void LCD_menuConfiguracion(configurable c){
 	strcpy(pantallaMensaje, "*:Guardar #:Cancelar");
 	LCD_pos_xy(0,3);
 	LCD_write_string(pantallaMensaje);
+	switch(c){
+		case TEL : 
+			LCD_pos_xy(4,2);
+		break;
+		case TEMP : 	
+			LCD_pos_xy(4,2);
+		break;
+		case HUM : 	
+			LCD_pos_xy(8,2);
+		break;
+		default : ;
+	}
+	cb = c;
 }
 
 void LCD_configIngresarNum(char num){
-	LCD_pos_xy(5+pos,2);
 	LCD_write_char(num);
 	pos++;
+}
+
+void LCD_configBorrarChar(void){
+	pos--;
+	switch(cb){
+		case TEL : 
+			LCD_pos_xy(4+pos,2);
+			LCD_write_char(' ');
+			LCD_pos_xy(4+pos,2);
+		break;
+		case TEMP : 	
+			LCD_pos_xy(4+pos,2);
+			LCD_write_char(' ');
+			LCD_pos_xy(4+pos,2);
+		break;
+		case HUM : 	
+			LCD_pos_xy(8+pos,2);
+			LCD_write_char(' ');
+			LCD_pos_xy(8+pos,2);
+		break;
+		default : ;
+	}
 }
 
 void LCD_configConfirmarNum(void){
@@ -244,6 +280,7 @@ void LCD_configConfirmarNum(void){
 	LCD_pos_xy(6,2);
 	LCD_write_string(pantallaMensaje);
 	pos = 0;
+	cb = NC;
 }
 
 void LCD_configEliminarNum(void){
@@ -255,6 +292,7 @@ void LCD_configEliminarNum(void){
 	LCD_pos_xy(5,2);
 	LCD_write_string(pantallaMensaje);
 	pos = 0;
+	cb = NC;
 }
 
 void LCD_configErrorNum(void){
@@ -266,6 +304,7 @@ void LCD_configErrorNum(void){
 	LCD_pos_xy(6,2);
 	LCD_write_string(pantallaMensaje);
 	pos = 0;
+	cb = NC;
 }
 
 void LCD_menuConfigActual(int temp, int hum, char* tel){
