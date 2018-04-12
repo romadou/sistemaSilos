@@ -17,7 +17,7 @@ char valor[4];
 /* Posición del valor numérico ingresado */
 int pos = 0;
 /* Referencia al valor numérico ingresado */
-configurable cb;
+configurable cb = NC;
 
 /* Funciones privadas */
 void mostrarNormal(void); /* Visualización del mensaje "NORMAL" en la primera línea del LCD */
@@ -132,6 +132,7 @@ void LCD_sensoresActivos(int sensores_activos){
 	LCD_limpiarLinea(1);
 	LCD_pos_xy(0,1);
 	strcpy(pantallaMensaje, "Sensores activos: ");
+	LCD_write_string(pantallaMensaje);
 	numASCII(sensores_activos);
 	LCD_write_string(valor);
 }
@@ -440,7 +441,7 @@ void mostrarTemperaturaInterior(int tempi){
 	strcpy(pantallaMensaje, "T.I: ");
 	LCD_pos_xy(1,2);
 	LCD_write_string(pantallaMensaje);
-	if (tempe == 255){
+	if (tempi == 255){
 		strcpy(valor, "XX");	
 	}
 	else{
@@ -464,7 +465,7 @@ void mostrarHumedadInterior(int humi){
 	strcpy(pantallaMensaje, "H.I: ");
 	LCD_pos_xy(1,3);
 	LCD_write_string(pantallaMensaje);
-	if (tempe == 255){
+	if (humi == 255){
 		strcpy(valor, "XX");	
 	}
 	else{
@@ -476,7 +477,7 @@ void mostrarHumedadExterior(int hume){
 	strcpy(pantallaMensaje, "H.E: ");
 	LCD_pos_xy(11,3);
 	LCD_write_string(pantallaMensaje);
-	if (tempe == 255){
+	if (hume == 255){
 		strcpy(valor, "XX");	
 	}
 	else{
