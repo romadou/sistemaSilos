@@ -27,7 +27,7 @@ uint8_t timeout(void);
 
 static uint8_t input_buffer[11];
 
-/* Representa la cantidad de datos que ya fueron ingresados*/
+/* Representa la cantidad de datos que ya fueron ingresados */
 static uint8_t loaded_input;
 
 int buffer_to_int(void);
@@ -147,14 +147,23 @@ void MEF_updateState(uint8_t critico){
 					loaded_input=0;
 					currentState=CANCELADO;
 				break;
+				case 'B':
+					stateTimeout=8;
+					if (loaded_input>0){
+						loaded_input--;
+						LCD_configBorrarChar();
+					}
+				break;
 				case NOT_PRESSED:
 				break;
 				default:
 					stateTimeout=16;
 					if (KEYPAD_numero(key) && loaded_input<4 && (loaded_input>0 || key !='0')){
 						input_buffer[loaded_input++]=key;
-						LCD_pos_xy(8+loaded_input,2);
-						LCD_write_char(key);
+						//Esto estaba implementado en una función de la librería lcd_mensajes
+						//LCD_pos_xy(8+loaded_input,2);
+						//LCD_write_char(key);
+						LCD_configIngresarNum(key);
 					}
 				break;
 			}
@@ -184,14 +193,23 @@ void MEF_updateState(uint8_t critico){
 					loaded_input=0;
 					currentState=CANCELADO;
 				break;
+				case 'B':
+					stateTimeout=8;
+					if (loaded_input>0){
+						loaded_input--;
+						LCD_configBorrarChar();
+					}
+				break;
 				case NOT_PRESSED:
 				break;
 				default:
 					stateTimeout=16;
 					if (KEYPAD_numero(key) && loaded_input<4 && (loaded_input>0 || key !='0')){
 						input_buffer[loaded_input++]=key;
-						LCD_pos_xy(8+loaded_input,2);
-						LCD_write_char(key);
+						//Esto estaba implementado en una función de la librería lcd_mensajes
+						//LCD_pos_xy(8+loaded_input,2);
+						//LCD_write_char(key);
+						LCD_configIngresarNum(key);
 					}
 				break;
 			}
@@ -217,14 +235,23 @@ void MEF_updateState(uint8_t critico){
 					currentState=CANCELADO;
 					loaded_input=0;
 				break;
+				case 'B':
+					stateTimeout=8;
+					if (loaded_input>0){
+						loaded_input--;
+						LCD_configBorrarChar();
+					}
+				break;
 				case NOT_PRESSED:
 				break;
 				default:
 					stateTimeout=16;
 					if (KEYPAD_numero(key) && loaded_input<10 && (loaded_input>0 || key !='0')){
 						input_buffer[loaded_input++]=key;
-						LCD_pos_xy(3+loaded_input,2);
-						LCD_write_char(key);
+						//Esto estaba implementado en una función de la librería lcd_mensajes
+						//LCD_pos_xy(3+loaded_input,2);
+						//LCD_write_char(key);
+						LCD_configIngresarNum(key);
 					}
 				break;
 			}
@@ -357,11 +384,10 @@ void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, 
 			case REPORTE_CONFIG:
 				LCD_menuConfigActual(CONFIG_get_desired_temp(), CONFIG_get_desired_hum(), GPRS_get_dest_num());
 			break;
+		}
 	}
-	}
-
-
 }
+
 /*
 1=500ms
 */
