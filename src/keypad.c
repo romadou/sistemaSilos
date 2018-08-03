@@ -5,6 +5,7 @@
  * @author Arambarri-Krasowski-Madou-Maxit
  * @date 2018-08
  */
+
 #include "keypad.h"
 #include "chip.h"
 #include "lcd.h"
@@ -25,18 +26,14 @@ uint8_t teclado[] =
 '7','8','9','C',
 '*','0','#','D' };
 
-uint8_t key=0;
-uint8_t x=0,y=0;
+uint8_t key = 0;
+uint8_t x = 0, y = 0;
 static uint8_t KeyChanged;
 static uint8_t valid_key;
 
 
 static uint32_t pausems_count;
 
-/**
- * @brief Configuración inicial del teclado matricial
- * 
- */
 void KEYPAD_init(){
 	/* Se configuran los primeros pines como salida y los últimos como entrada */
 
@@ -75,13 +72,6 @@ void KEYPAD_init(){
 
 }
 
-/**
- * @brief Escaneo del teclado en busca de una tecla presionada
- * Control contra detecciones duplicadas
- * 
- * @param pkey Tecla presionada, si la hay
- * @return uint8_t "1" si hay tecla presionada, "0" si no la hay
- */
 uint8_t KEYPAD_ScanAutorepeat (uint8_t *pkey){
 	static char old_key, last_valid_key;
 	uint8_t key='s';
@@ -105,12 +95,6 @@ uint8_t KEYPAD_ScanAutorepeat (uint8_t *pkey){
 	}
 }
 
-/**
- * @brief Barrido del teclado en busca de una tecla presionada
- * 
- * @param pkey Tecla presionada, si la hay
- * @return uint8_t "1" si hay tecla presionada, "0" si no la hay
- */
 uint8_t KEYPAD_Scan(uint8_t *pkey){
 
 	uint8_t i;
@@ -165,23 +149,11 @@ uint8_t KEYPAD_Scan(uint8_t *pkey){
 
 }
 
-/**
- * @brief Decisión sobre si una tecla presionada es un dígito
- * 
- * @param tecla Tecla presionada
- * @return unsigned char "1" si es un dígito, "0" si no lo es
- */
 unsigned char KEYPAD_numero(unsigned char tecla){
 	if ((tecla >= '0') && ('9' >= tecla)) return 1;
 	return 0;
 }
 
-/**
- * @brief Devuelve la tecla presionada, si la hay
- * 
- * @param_out key Tecla presionada 
- * @return uint8_t "1" si hay tecla válida presionada, "0" si no la hay
- */
 uint8_t KEYPAD_getkey(uint8_t *key){
 	/* Evita que se tome una tecla 2 veces */
 	if(!KeyChanged)

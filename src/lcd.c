@@ -43,17 +43,13 @@ union ubyte
 	} bit;
 };
 
-
-	
-/* Delay por software para operaciones de teclado */
+/* Delay por software para operaciones de teclado (milisegundos) */
 static void LCD_delay_ms(uint8_t ms){
 	volatile uint64_t tiempo;
 	for(tiempo=0;tiempo<=20400*ms;tiempo++);
 }
 
-
-
-
+/* Delay por software para operaciones de teclado (microsegundos) */
 static void LCD_delay_us(uint8_t us){
 	volatile uint64_t tiempo;
 	for(tiempo=0;tiempo<=21*us;tiempo++); // 20400/1000
@@ -61,7 +57,6 @@ static void LCD_delay_us(uint8_t us){
 
 
 void LCD_send_nibble(char data){
-
 	union ubyte my_union;
 	my_union._byte = data;
 
@@ -85,10 +80,7 @@ void LCD_send_nibble(char data){
 
 
 
-void LCD_send_byte(char address, char data)
-{
-	/* address: Determina si lo que se manda es un comando o caracter 
- 	  data: dato a enviar. */
+void LCD_send_byte(char address, char data){
 
 	if(address==0)
 		Chip_GPIO_SetPinState(LPC_GPIO_PORT, 2, 8, 0); // Pin R/S
@@ -114,8 +106,6 @@ void LCD_pos_xy(char x, char y){
 	LCD_send_byte(0,0x80|address);
 }
 
-
-
 void LCD_write_char(char c){
 	switch (c){
 		case '\f' :	
@@ -131,7 +121,6 @@ void LCD_write_char(char c){
 	}
 }
 
-
 void LCD_write_string (char *c){
 	while (*c){
 	  	LCD_write_char(*c);
@@ -139,12 +128,10 @@ void LCD_write_string (char *c){
 	}
 }
 
-
 void LCD_display_on(void){
 	lcd_mode |= 4;
 	LCD_send_byte (0,lcd_mode);
 }
-
 
 void LCD_display_off(void){
 	lcd_mode &= 0b11111011;
@@ -155,7 +142,6 @@ void LCD_cursor_on(void){
 	lcd_mode |= 2;
 	LCD_send_byte (0,lcd_mode);
 }
-
 
 void LCD_cursor_off(void){
 	lcd_mode &= 0b11111101;

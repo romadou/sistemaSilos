@@ -18,15 +18,11 @@ uint8_t dato;
 uint8_t i;
 
 
-void delay_GPRS(uint8_t ms);
+void delay_GPRS(uint8_t ms); /* Delay por software (milisegundos) para operaciones del módulo GPRS */
 
-/**
- * @brief Configuración inicial del módulo GPRS
- * 
- */
 void GPRS_config(void){
    dato = 0;   
-
+   
    // Inicialización de las UART según BAUD_RATE
    uartConfig(UART_USBX, BAUDRATE_38400);
    uartConfig(UART_RS232, BAUDRATE_38400);
@@ -36,10 +32,6 @@ void GPRS_config(void){
 
 }
 
-/**
- * @brief Actuación: envío de SMS por alerta en el sistema
- * 
- */
 void GPRS_alerta(void){
    dato  = 0;
    uartWriteString( UART_RS232, "AT+CMGS=\"" );
@@ -72,10 +64,6 @@ void GPRS_alerta(void){
    }
 }
 
-/**
- * @brief Actuación: envío de SMS por situación crítica en el sistema
- * 
- */
 void GPRS_critico(void){
    dato  = 0;
    uartWriteString( UART_RS232, "AT+CMGS=\"" );
@@ -108,30 +96,15 @@ void GPRS_critico(void){
    }
 }
 
-/**
- * @brief Modificación del número de teléfono destino
- * 
- * @param dest_num Nuevo número de teléfono destino
- */
 void GPRS_set_dest_num(char *dest_num){
    strcpy(dest_number, dest_num);
 }
 
-/**
- * @brief Recuperación del número de teléfono destino
- * 
- * @return char* Número de teléfono destino cargado en el sistema
- */
 char* GPRS_get_dest_num(void){
    strcpy(dest_aux, dest_number);
    return dest_aux;
 }
 
-/**
- * @brief Delay por software para operaciones del módulo GPRS
- * 
- * @param ms Milisegundos a demorar
- */
 void delay_GPRS(uint8_t ms){
     volatile uint64_t tiempo;
     for(tiempo=0;tiempo<=20400*ms;tiempo++);

@@ -51,10 +51,10 @@
 #define HUM_TOO_HIGH 2
 #endif
 
-void CONFIG_init(void);
-int CONFIG_get_desired_temp(void);
-int CONFIG_set_desired_temp(int new_temp);
-int CONFIG_get_desired_hum(void);
-int CONFIG_set_desired_hum(int new_hum);
+void CONFIG_init(void); /* Configuración inicial de los parámetros del sistema */
+int CONFIG_get_desired_temp(void); /* Pedido de la temperatura configurada como deseada para el sistema */
+int CONFIG_set_desired_temp(int new_temp); /* Configuración de la temperatura deseada para el sistema */
+int CONFIG_get_desired_hum(void); /* Pedido de la humedad configurada como deseada para el sistema */
+int CONFIG_set_desired_hum(int new_hum); /* Configuración de la humedad deseada para el sistema */
 
 #endif

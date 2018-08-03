@@ -1,3 +1,9 @@
+/**
+ * @file keypad.h 
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
+
 #ifndef KEYPAD_H_
 #define KEYPAD_H_
 
