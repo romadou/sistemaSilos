@@ -1,3 +1,9 @@
+/**
+ * @file MEF.h 
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
+
 #include "sapi.h"
 #ifndef MEF_H_
 #define MEF_H_

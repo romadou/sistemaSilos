@@ -1,4 +1,3 @@
-
 /* Copyright 2016, Eric Pernia.
  * All rights reserved.
  *

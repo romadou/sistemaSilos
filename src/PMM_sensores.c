@@ -1,3 +1,11 @@
+/**
+ * @brief Controlador y protocolo de comunicación de los sensores
+ * 
+ * @file PMM_sensores.c
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
+
 #include <stdio.h>
 #include <uart.h>
 #include "PMM_sensores.h"

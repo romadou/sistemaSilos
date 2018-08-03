@@ -1,10 +1,9 @@
-/* 
- * lcd_mensajes.h
- *
- *  Created on: 22/10/2017
- *      Author: Krasowski - Madou
+/**
+ * @file lcd_mensajes.h 
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
  */
-
+ 
 #ifndef LCD_MENSAJES_H_
 #define LCD_MENSAJES_H_
 

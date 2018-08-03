@@ -1,3 +1,11 @@
+/**
+ * @brief Máquina de estados finitos del sistema
+ * 
+ * @file MEF.c
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
+ 
 #include "tipos.h"
 #include "MEF.h"
 #include "lcd_mensajes.h"

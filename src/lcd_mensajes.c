@@ -1,10 +1,11 @@
-/*
- * mensajes.c
- *
- *  Created on: 30/11/2017
- *      Author: Madou
+/**
+ * @brief Controlador de los mensajes que se muestran por la pantalla lcd
+ * 
+ * @file lcd_mensajes.c
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
  */
- 
+
 #include "lcd_mensajes.h"
 #include "lcd.h"
 #include "string.h"

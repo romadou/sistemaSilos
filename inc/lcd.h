@@ -1,8 +1,7 @@
-/*
- * lcd.h
- *
- *  Created on: 30/07/2013
- *      Author: pc2
+/**
+ * @file lcd.h 
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
  */
 
 #ifndef LCD_H_

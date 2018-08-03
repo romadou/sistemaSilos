@@ -1,3 +1,9 @@
+/**
+ * @file tipos.h 
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
+
 #ifndef TIPOS_H_
 #define TIPOS_H_
 //8 bits sin signo

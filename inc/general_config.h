@@ -1,3 +1,9 @@
+/**
+ * @file general_config.h 
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
+
 #ifndef _GENERAL_CONFIG_H
 #define _GENERAL_CONFIG_H
 

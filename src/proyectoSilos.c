@@ -1,7 +1,7 @@
 /**
  * @brief Sistema operativo general
  * 
- * @file proyectoSilos4.c
+ * @file proyectoSilos.c
  * @author Arambarri-Krasowski-Madou-Maxit
  * @date 2018-08
  */

@@ -1,25 +1,15 @@
-/*
- * @brief EDU-CIAA UART driver
- *
- * @note
- * Copyright(C) Matias Alvarez, 2017
+/**
+ * @brief Controlador de la interfaz UART
  * 
+ * @file uart.c
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
  */
-/*==================[inclusions]=============================================*/
+ 
 #include "uart.h"
 #include "chip.h"
 #include "stdint.h"
 #include "cmsis.h"
-
-/*==================[macros and definitions]=================================*/
-
-/*==================[internal data declaration]==============================*/
-
-/*==================[internal functions declaration]=========================*/
-
-/*==================[internal functions definition]==========================*/
-
-/*==================[external functions definition]==========================*/
 
 /**
  * @brief   Configs UART

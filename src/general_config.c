@@ -1,3 +1,11 @@
+/**
+ * @brief Configuraciones generales del sistema
+ * 
+ * @file general_config.c
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
+ 
 #include "general_config.h"
 
 static int desired_temp;

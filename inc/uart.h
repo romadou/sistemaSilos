@@ -1,11 +1,16 @@
+/**
+ * @file uart.h 
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
+
 #ifndef _UART_H_
 #define _UART_H_
 
-/*==================[inclusions]=============================================*/
 #include "chip.h"
 #include "stdint.h"
 #include "cmsis.h"
-/*==================[macros]=================================================*/
+
 #define UART_RS485 		0
 #define UART_USBX 		2
 #define UART_RS232		3

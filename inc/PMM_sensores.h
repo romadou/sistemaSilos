@@ -1,9 +1,8 @@
-/*
-* PMM_sensores.h
-*
-*  Created on: 16/12/2017
-*      Author: Madou
-*/
+/**
+ * @file PMM_sensores.h 
+ * @author Arambarri-Krasowski-Madou-Maxit
+ * @date 2018-08
+ */
 
 #ifndef PMM_SENSORES_H_
 #define PMM_SENSORES_H_
@@ -11,19 +10,19 @@
 
 typedef enum {ESTADO, DATA} operacion;
 
-void PMM_init(void); /* Inicialización de la comunicación */
+void PMM_init(void); /* Inicializaciï¿½n de la comunicaciï¿½n */
 
-/* Armado del paquete correspondiente al pedido de estado o de información que será enviado al sensor recibido por parámetro */
+/* Armado del paquete correspondiente al pedido de estado o de informaciï¿½n que serï¿½ enviado al sensor recibido por parï¿½metro */
 /* Variables
  * Entrada: 
  *		id_sensor: ID del sensor receptor;
- *		cod_op: código de operación (enumerativo - ESTADO/DATA); 
+ *		cod_op: cï¿½digo de operaciï¿½n (enumerativo - ESTADO/DATA); 
  * Salida:
  *		*paq: paquete de pedido listo para ser transmitido;
  */
 void PMM_setPaq(unsigned char id_sensor, operacion cod_op, unsigned char *paq); 
 
-/* Verificación de la correcta recepción del mensaje y obtención de los valores medidos por uno de los sensores */
+/* Verificaciï¿½n de la correcta recepciï¿½n del mensaje y obtenciï¿½n de los valores medidos por uno de los sensores */
 /* Variables
  * Entrada:
  *		*paq: paquete recibido; 
@@ -35,7 +34,7 @@ void PMM_setPaq(unsigned char id_sensor, operacion cod_op, unsigned char *paq);
  */
 unsigned char PMM_getData(unsigned char *paq, unsigned char id_sensor, unsigned char *temp, unsigned char *hum); 
 
-/* Verificación del mensaje de estado del sensor recibido por parámetro */
+/* Verificaciï¿½n del mensaje de estado del sensor recibido por parï¿½metro */
 /* Variables
  * Entrada:
  *		*paq: paquete recibido; 
