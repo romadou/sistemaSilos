@@ -18,27 +18,18 @@
 #include "general_config.h"
 #include "stdlib.h"
 
-
-
-
+/* Definiciones y variables privadas */
 typedef enum {DEFAULT, REPORTE_COMPONENTES, REPORTE_VENTILADOR, CANCELADO, CRITIC, MENU, REPORTE_CONFIG, CONFIG_TEMPERATURA, CONFIG_HUMEDAD,ERROR_TEMP, TEMPERATURA_INGRESADA, HUMEDAD_INGRESADA, ERROR_HUM, CONFIG_CELULAR, NUMERO_INGRESADO} state;
 static state currentState;
 static state previousState;
-
-static uint8_t stateTimeout;
+static uint8_t stateTimeout; /* Variable de control para los timeout. 1=500ms */
 extern uint8_t key;
+static uint8_t input_buffer[11]; /* Buffer de entrada de caracteres */
+static uint8_t loaded_input; /* Representa la cantidad de datos que ya fueron ingresados */
 
-/* 
-Devuelve 1 si alcanzó el timeout, 0 en caso contrario
-*/
-uint8_t timeout(void);
-
-static uint8_t input_buffer[11];
-
-/* Representa la cantidad de datos que ya fueron ingresados */
-static uint8_t loaded_input;
-
-int buffer_to_int(void);
+/* Funciones privadas */
+uint8_t timeout(void); /* Devuelve 1 si alcanzó el timeout, 0 en caso contrario */
+int buffer_to_int(void); /* Convierte lo almacenado en el buffer a un entero */
 
 
 void MEF_Init(){
@@ -214,9 +205,6 @@ void MEF_updateState(uint8_t critico){
 					stateTimeout=16;
 					if (KEYPAD_numero(key) && loaded_input<4 && (loaded_input>0 || key !='0')){
 						input_buffer[loaded_input++]=key;
-						//Esto estaba implementado en una función de la librería lcd_mensajes
-						//LCD_pos_xy(8+loaded_input,2);
-						//LCD_write_char(key);
 						LCD_configIngresarNum(key);
 					}
 				break;
@@ -256,9 +244,6 @@ void MEF_updateState(uint8_t critico){
 					stateTimeout=16;
 					if (KEYPAD_numero(key) && loaded_input<10 && (loaded_input>0 || key !='0')){
 						input_buffer[loaded_input++]=key;
-						//Esto estaba implementado en una función de la librería lcd_mensajes
-						//LCD_pos_xy(3+loaded_input,2);
-						//LCD_write_char(key);
 						LCD_configIngresarNum(key);
 					}
 				break;
@@ -321,7 +306,6 @@ void MEF_updateState(uint8_t critico){
 	}
 }
 
-//ATENCION!! LOS VALORES DE TEMPERATURA Y HUMEDAD DEBEN VENIR SOLO EN SU PARTE ENTERA: EL LCD NO MUESTRA PARTE DECIMAL
 void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, uint8_t sensores_activos, uint8_t sensorCaido, uint8_t vent){
 	if(currentState!=previousState){
 		switch(currentState){
@@ -396,13 +380,10 @@ void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, 
 	}
 }
 
-/*
-1=500ms
-*/
 uint8_t timeout(void){
 	stateTimeout--;
 	if(stateTimeout<=0)
-		return 1; //se terminó el tiempo
+		return 1; // Se terminó el tiempo
 	else
 		return 0;
 }

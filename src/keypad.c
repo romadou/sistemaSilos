@@ -16,26 +16,22 @@
 #define OUTPUT	1
 #define INPUT	0
 
-uint8_t evaluarCol(uint8_t *pkey,uint8_t i);
-uint8_t KEYPAD_Scan(uint8_t*pkey);
-static void pausems(uint32_t t);
-
+/* Variables privadas */
 uint8_t teclado[] =
 { '1','2','3','A',
 '4','5','6','B',
 '7','8','9','C',
 '*','0','#','D' };
-
 uint8_t key = 0;
 uint8_t x = 0, y = 0;
 static uint8_t KeyChanged;
 static uint8_t valid_key;
 
-
-static uint32_t pausems_count;
+/* Funciones privadas */
+uint8_t KEYPAD_Scan(uint8_t *pkey); /* Escaneo del teclado */
 
 void KEYPAD_init(){
-	/* Se configuran los primeros pines como salida y los últimos como entrada */
+	// Se configuran los primeros pines como salida y los últimos como entrada
 
 	// CAN_RD P3_1 GPIO5[8]
 	Chip_SCU_PinMux(3,1,SCU_MODE_INACT|SCU_MODE_ZIF_DIS,SCU_MODE_FUNC4);
@@ -99,7 +95,7 @@ uint8_t KEYPAD_Scan(uint8_t *pkey){
 
 	uint8_t i;
 
-	/* Valor lógico 1 a los pines configurados como salida */
+	// Valor lógico 1 a los pines configurados como salida
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 5, 8, 1);
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 5, 9, 1);
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 3, 12, 1);
@@ -155,7 +151,7 @@ unsigned char KEYPAD_numero(unsigned char tecla){
 }
 
 uint8_t KEYPAD_getkey(uint8_t *key){
-	/* Evita que se tome una tecla 2 veces */
+	// Evita que se tome una tecla 2 veces
 	if(!KeyChanged)
 		return 0;
 	else{

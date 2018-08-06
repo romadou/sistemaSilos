@@ -36,4 +36,4 @@ void LCD_limpiarLinea(int l); /* Limpieza del número de línea recibido */
 void LCD_limpiarPantalla(void); /* Limpieza de las cuatro líneas correspondientes al display */
 
 
-#endif /* MENSAJES_H_ */
+#endif

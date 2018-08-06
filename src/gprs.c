@@ -11,13 +11,14 @@
 #include "sapi.h" 
 #include "string.h"
 
+/* Variables privadas */
 char src_number[11] = "2215410495"; // Número de teléfono origen (SIM insertada)
 char dest_number[11] = "2314401890"; // Número de teléfono destino (receptor de los SMS)
 char dest_aux[11] = " ";
 uint8_t dato;
 uint8_t i;
 
-
+/* Funciones privadas */
 void delay_GPRS(uint8_t ms); /* Delay por software (milisegundos) para operaciones del módulo GPRS */
 
 void GPRS_config(void){

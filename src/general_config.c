@@ -8,6 +8,7 @@
  
 #include "general_config.h"
 
+/* Variables privadas */
 static int desired_temp;
 static int desired_hum;
 static int current_temp;

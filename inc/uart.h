@@ -59,22 +59,14 @@
 
 #define NO_DATA_RECEIVED_ERROR  1
 #define NO_ERROR 				0
-/*==================[typedef]================================================*/
 
-/*==================[external data declaration]==============================*/
+void uartConfig(uint8_t uart, uint32_t baudRate); /* Configuración general */
+void uartWriteByte(uint8_t uart, uint8_t data); /* Enviar un byte por la terminal UART */
+void uartWriteString(uint8_t uart, char *data); /* Enviar una cadena de bytes por la terminal UART */
+void uartEnableRxInterrupt(uint8_t uart); /* Habilitar las interrupciones de recepción de la UART */
+void uartDisableRxInterrupt(uint8_t uart); /* Deshabilitar las interrupciones de recepción de la UART */
+uint8_t uartReceiveByte(uint8_t uart, uint8_t *data); /* Recibir un byte por la terminal UART */
+void uartReceiveString(uint8_t uart, uint8_t  data [], uint8_t length); /* Recibir una cadena de bytes por la terminal UART */
+void uartResetFIFO(uint8_t uart); /* Resetear el buffer de la UART */
 
-/*==================[external functions declaration]=========================*/
-void uartConfig(uint8_t uart, uint32_t baudRate);
-void uartWriteByte(uint8_t uart, uint8_t data);
-void uartWriteString(uint8_t uart, char *data);
-void uartEnableRxInterrupt(uint8_t uart);
-void uartDisableRxInterrupt(uint8_t uart);
-uint8_t uartReceiveByte(uint8_t uart, uint8_t *data);
-void uartReceiveString(uint8_t uart, uint8_t  data [], uint8_t length);
-void uartResetFIFO(uint8_t uart);
-
-/** @} doxygen end group definition */
-/** @} doxygen end group definition */
-/** @} doxygen end group definition */
-/*==================[end of file]============================================*/
-#endif /* #ifndef _UART_H_ */
+#endif

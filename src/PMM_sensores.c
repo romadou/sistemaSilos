@@ -10,15 +10,12 @@
 #include <uart.h>
 #include "PMM_sensores.h"
 
-#define COD_STATUS 0x0A		//Código de pedido de estado
-#define COD_DATA 0X1E		//Código de pedido de dato
+#define COD_STATUS 0x0A		// Código de pedido de estado
+#define COD_DATA 0X1E		// Código de pedido de dato
 
-
-/* Variables privadas */
-/* Control */
-//unsigned char error;
 /* Estructuras de mensaje */
-/*Estructura pedido*/
+
+/* Estructura pedido */
 unsigned char datagram[3];
 /*
 Datagram:
@@ -26,7 +23,8 @@ byte 0: 1;
 byte 1: ID sensor;
 byte 2: comand;
 */
-/*Estructura respuesta*/
+
+/* Estructura respuesta */
 unsigned char resp[6];
 /*
 Resp_x:

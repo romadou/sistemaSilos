@@ -17,4 +17,4 @@ void GPRS_critico(void); /* Actuación: envío de SMS por situación crítica en
 void GPRS_set_dest_num(char *dest_num); /* Modificación del número de teléfono destino */
 char* GPRS_get_dest_num(void); /* Recuperación del número de teléfono destino */
 
-#endif /* #ifndef GPRS_H_ */
+#endif

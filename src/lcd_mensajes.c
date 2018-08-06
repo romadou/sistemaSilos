@@ -86,7 +86,7 @@ void LCD_estado(estado e, problema p){
 		mostrarAlerta();
 	}	
 
-	//Segunda línea
+	// Segunda línea
 	LCD_limpiarLinea(1);
 	switch (p){
 		case TEMPERATURA : 	
@@ -197,7 +197,7 @@ void LCD_menuMonitor(estado e, problema p, int tempi, int tempe, int humi, int h
 		break;
 	}
 
-	// Tercer y Cuarta línea
+	// Tercera y Cuarta líneas
 	mostrarTemperaturaInterior(tempi);
 	mostrarTemperaturaExterior(tempe);
 	mostrarHumedadInterior(humi);

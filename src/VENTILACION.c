@@ -15,13 +15,10 @@ uint8 VENTILACION_actuar(uint8 tempInterior, uint8 tempExterior, uint8 humInteri
 		gpioWrite(ENET_RXD1,1);
 		return 1;
 	}
-
 	else{
 		gpioWrite(ENET_RXD1,0);
 		return 0;
 	}
-
-
 }
 
 void VENTILACION_Init(void){

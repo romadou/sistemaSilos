@@ -22,11 +22,10 @@ https://github.com/capse3Co2017/capse3Co_Nivel2/blob/master/Alumnos/Turno2/EricP
 #define OUTPUT	1
 #define INPUT	0
 
+/* Variables privadas */
 /* Configuracion del display */
 static char lcd_mode;
-
-/* Representacion del caracter */
-
+/* Representacion del carácter */
 union ubyte
 {
 	char _byte;
@@ -43,12 +42,12 @@ union ubyte
 	} bit;
 };
 
+/* Funciones privadas */
 /* Delay por software para operaciones de teclado (milisegundos) */
 static void LCD_delay_ms(uint8_t ms){
 	volatile uint64_t tiempo;
 	for(tiempo=0;tiempo<=20400*ms;tiempo++);
 }
-
 /* Delay por software para operaciones de teclado (microsegundos) */
 static void LCD_delay_us(uint8_t us){
 	volatile uint64_t tiempo;
@@ -60,7 +59,7 @@ void LCD_send_nibble(char data){
 	union ubyte my_union;
 	my_union._byte = data;
 
-	/* Se envían los parámetros */
+	// Se envían los parámetros
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 0, 13, my_union.bit.b3);
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 3, 3, my_union.bit.b2);
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 5, 15, my_union.bit.b1);
@@ -68,12 +67,12 @@ void LCD_send_nibble(char data){
 
 	LCD_delay_us(43);
 
-	/* Se habilita el LCD */
+	// Se habilita el LCD
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 3, 7, 1);
 
 	LCD_delay_us(2);
 
-	/* Se deshabilita el LCD */
+	// Se deshabilita el LCD
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 3, 7, 0);
 }
 
@@ -160,7 +159,7 @@ void LCD_cursor_blink_off(void){
 
 void LCD_init(char mode1, char mode2){
 	char aux;
-	/* Se configuran los pines de datos como salida */
+	// Se configuran los pines de datos como salida
 
 	// TXD0 P1_18 GPIO0[13]
 	Chip_SCU_PinMux(1,18,SCU_MODE_INACT|SCU_MODE_INBUFF_EN|SCU_MODE_ZIF_DIS,SCU_MODE_FUNC0);
@@ -179,7 +178,7 @@ void LCD_init(char mode1, char mode2){
 	Chip_GPIO_SetDir( LPC_GPIO_PORT, 3, ( 1 << 5 ), OUTPUT );
 
 	
-	/* Se configura el pin de enable y RS como salida */
+	// Se configura el pin de enable y RS como salida
 	
 	// ENABLE GPIO7 P6_11 GPIO3[7]
 	Chip_SCU_PinMux(6,11,SCU_MODE_INACT|SCU_MODE_INBUFF_EN|SCU_MODE_ZIF_DIS,SCU_MODE_FUNC0);
@@ -191,7 +190,7 @@ void LCD_init(char mode1, char mode2){
 	Chip_GPIO_SetDir( LPC_GPIO_PORT, 2, ( 1 << 8 ), OUTPUT );
 	
 
-	/* Se ponen los pines del lcd en cero */
+	// Se ponen los pines del lcd en cero
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 0, 13, 0);
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 3, 3, 0);
 	Chip_GPIO_SetPinState(LPC_GPIO_PORT, 5, 15, 0);
@@ -201,23 +200,22 @@ void LCD_init(char mode1, char mode2){
 
 	/*---------------------Inicializacion del display--------------------*/
  
-	/*R/W conectado a tierra y RS en 0*/
+	// R/W conectado a tierra y RS en 0
 	
-	/*1: Esperar mas de 15 ms*/
+	// 1: Esperar mas de 15 ms
 	LCD_delay_ms(20);
 	
-	/*2: Enviar tres veces 0011 */
+	// 2: Enviar tres veces 0011
 	for(aux=0;aux<3;++aux)
 	{		
 	  LCD_send_nibble(3);
-	  /*delay5*/
 	  LCD_delay_ms(5);
 	}
 
-	/*3: Enviar 0010 */
+	// 3: Enviar 0010
 	LCD_send_nibble(2);
 
-	/* Datos de configuracion del LCD */
+	// Datos de configuracion del LCD
 	LCD_send_byte(0,0x20 | mode1);
 	LCD_send_byte(0,0x08 | mode2);
 	lcd_mode = 0x08 | mode2;

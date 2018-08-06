@@ -21,6 +21,7 @@
 #include "PMM_sensores.h"
 #include "gprs.h"
 
+/* Variables privadas */
 uint8_t key;
 uint8_t slaves[MAXSLAVES][COLUMN_DATA];
 uint8_t activeSlavesTotal;
@@ -41,15 +42,12 @@ uint8_t retransmision;
 uint8_t cantidciaa,cantidesc,cantidciaa1,cantidesc1;
 static uint8_t ACT_ID;
 
-
+/* Funciones privadas */
 void processData (void);
 void processActives (void);
 void info (void);
 
-/**
- * @brief Función principal, punto de entrada al programa al encender o reiniciar el sistema
- *  
- */
+/* Función principal, punto de entrada al programa al encender o reiniciar el sistema */
 int main( void ){
 	// CONFIGURACIONES
 	// Inicializar y configurar la plataforma
@@ -66,10 +64,7 @@ int main( void ){
    return 0;
 }
 
-/**
- * @brief Se ejecuta ante cualquier error y apaga el Sistema Operativo
- * 
- */
+/* Se ejecuta ante cualquier error y apaga el Sistema Operativo */
 void ErrorHook(void){
 	ShutdownOS(0);
 }
@@ -257,9 +252,9 @@ ISR (UART_RS485_IRQHandler){
 }
 
 /**
- * @brief Por cada esclavo:
- * 			- si está activo, toma su temperatura y humedad para realizar el promedio del interior del silo
- *			- si estuvo inactivo 30 veces seguidas, indica que hay esclavos inactivos
+ * Por cada esclavo:
+ * 		- si está activo, toma su temperatura y humedad para realizar el promedio del interior del silo
+ *  	- si estuvo inactivo 30 veces seguidas, indica que hay esclavos inactivos
  */
 void processActives (void){
 	uint8_t i;
@@ -286,10 +281,7 @@ void processActives (void){
 
 }
 
-/**
- * @brief Procesamiento de los datos obtenidos del sistema de sensado
- * 
- */
+/* Procesamiento de los datos obtenidos del sistema de sensado */
 void processData (void){
 	uint8_t i;
 	float tempAux, humAux;
@@ -337,10 +329,6 @@ void processData (void){
 	activeSlavesTotal=activeSlavesInterior+activeSlavesExterior;
 }
 
-/**
- * @brief 
- * 
- */
 void info(void){
 	int32_t message_length=0;
 	while (Chip_UART_ReadLineStatus(LPC_USART0) & UART_LSR_RDR) {
