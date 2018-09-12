@@ -4,8 +4,8 @@
  * @date 2018-08
  */
 
-#ifndef _PROYECTOSILOS4_H_
-#define _PROYECTOSILOS4_H_
+#ifndef _PROYECTOSILOS_H_
+#define _PROYECTOSILOS_H_
 
 
 #define CANT_SLAVES 2
@@ -16,7 +16,8 @@
 #define C_TEMP 2 /* En la columna 2 está la última temperatura en °C de c/esclavo */
 #define C_HUM 3 /* En la columna 3 está la última humedad relativa (%) de c/esclavo */
 
-#define TEMP_ALERTA 10
+#define TEMP_ALERTA 24
+#define DATO_INVALIDO 255
 
 #define ACTIVE 1 
 #define INACTIVE 0
@@ -25,5 +26,5 @@
 #define DETECT_TASK 4 /* Indicador de tarea DetectActiveSlavesTask */
 #define DATA_TASK 5 /* Indicador de tarea TakeDataSlavesTask */
 
-#endif
+#endif /* _PROYECTOSILOS_H_ */
 

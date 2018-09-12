@@ -13,7 +13,7 @@
 
 /* Variables privadas */
 char src_number[11] = "2215410495"; // Número de teléfono origen (SIM insertada)
-char dest_number[11] = "2314401890"; // Número de teléfono destino (receptor de los SMS)
+char dest_number[11] = "3764391747"; // Número de teléfono destino (receptor de los SMS)
 char dest_aux[11] = " ";
 uint8_t dato;
 uint8_t i;

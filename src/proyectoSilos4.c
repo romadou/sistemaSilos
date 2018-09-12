@@ -6,7 +6,7 @@
  * @date 2018-08
  */
 
-#include "proyectoSilos4.h"
+#include "proyectoSilos.h"
 #include "sapi.h"        // sAPI header
 #include "os.h"       // freeOSEK
 #include "MEF.h"
@@ -39,6 +39,9 @@ uint8_t posBuffer;
 uint8_t indice;
 uint8_t dato;
 uint8_t retransmision;
+uint8_t cantesc;
+uint8_t critic;
+uint8_t flagSensorCaido;
 static uint8_t ACT_ID;
 
 /* Funciones privadas */
@@ -52,8 +55,7 @@ int main( void ){
 	// Inicializar y configurar la plataforma
 	boardConfig();
 	PMM_init();
-	GPRS_config();
-
+	//GPRS_config();
 	// INICIAR SISTEMA OPERATIVO
 	StartOS(AppMode1);
 
@@ -78,10 +80,14 @@ TASK (InitTask){
 	key='s';
 	inactiveSlaves=0;
 	retransmision=0;
+	cantesc=0;
+	critic=0;
+	flagSensorCaido=0;
 	VENTILACION_Init();
 	LCD_init(DISPLAY_8X5 | _2_LINES , DISPLAY_ON | CURSOR_OFF);
 	MEF_Init();
 	CONFIG_init();
+	KEYPAD_init();
 	SetRelAlarm(ActivateKeypadTask, 1000, 100);
 	SetRelAlarm(ActivateRefreshDisplayTask, 1000, 500);
 	SetRelAlarm(ActivateDetectActiveSlavesTask, 1000, 2000);
@@ -106,8 +112,8 @@ TASK(RefreshDisplayTask){
 		key='s';
 	}
 
-	MEF_updateState(0);
-	MEF_updateOutput(temperatureI,temperatureE,humidityI,humidityE,activeSlavesTotal,inactiveSlaves,fan);
+	MEF_updateState(critic);
+	MEF_updateOutput(temperatureI,temperatureE,humidityI,humidityE,activeSlavesTotal,inactiveSlaves,fan, critic);
 	TerminateTask();
 
 }
@@ -146,6 +152,7 @@ TASK(DetectActiveSlavesTask){
 			else{
 				retransmision++;
 				slaves[id][C_STATE]=INACTIVE;
+				if(id==0)cantesc++;
 				slaves[id][C_INACTIVE]++;
 			}
 			ClearEvent(Events);
@@ -188,10 +195,12 @@ TASK(TakeDataSlavesTask){
 					}
 					else{
 						retransmision=3; // Fin
+						slaves[id][C_STATE]=ACTIVE;
 					}
 				}
 				else{
 					retransmision++;
+					if(id==0)cantesc++;
 					slaves[id][C_STATE]=INACTIVE;
 					slaves[id][C_INACTIVE]++;
 				}
@@ -213,17 +222,29 @@ TASK(TakeDataSlavesTask){
 TASK(ActionTask){
 	gpioToggle(LED3);
 	processData();
-		if(VENTILACION_actuar(temperatureI, temperatureE, humidityI, humidityE, CONFIG_get_desired_temp()))
+	if(VENTILACION_actuar(temperatureI, temperatureE, humidityI, humidityE, CONFIG_get_desired_temp()))
 		fan=1;
 	else
 		fan=0;
+	
 	if(temperatureI>=TEMP_ALERTA){
 		gpioToggle(LED1);
+		if(critic!=1){ //Si ya esta en estado critico no manda devuelta mensaje
+			//GPRS_critico();
+			critic=1;
+		}
 	}
+	else
+		critic=0;
 	if(inactiveSlaves){
 		gpioToggle(LED2);
-		GPRS_alerta();
+		if(flagSensorCaido!=1){
+			//GPRS_alerta();
+			flagSensorCaido=1;
+		}
 	}
+	else
+		flagSensorCaido=0;
 	
 	TerminateTask();
 
@@ -265,7 +286,7 @@ void processActives (void){
 		if(slaves[i][C_INACTIVE]>=MAX_INACTIVE)
 			cantInactiveSlaves++;
 	}
-	if(cantInactiveSlaves>=(MAXSLAVES-CANT_SLAVES))
+	if(cantInactiveSlaves>((MAXSLAVES-1)-CANT_SLAVES))
 		inactiveSlaves=1;
 	else
 		inactiveSlaves=0;
@@ -292,7 +313,7 @@ void processData (void){
 		if(tempAux-(uint8_t)tempAux > 0.5)
 			temperatureI=ceil(tempAux);
 		else
-			temperatureI=ceil(tempAux);
+			temperatureI=floor(tempAux);
 		
 		humAux=(float)totalHum/activeSlavesInterior; 
 		if(humAux-(uint8_t)humAux > 0.5)
@@ -308,7 +329,8 @@ void processData (void){
 	// Esclavo exterior
 	if(slaves[1][C_STATE]==ACTIVE){
 		temperatureE=slaves[1][C_TEMP];
-		humidityE=slaves[1][C_HUM];	
+		humidityE=slaves[1][C_HUM];
+			
 	}
 	else{ 
 		// Si el sensor exterior no funciona el sistema no funciona
