@@ -306,14 +306,17 @@ void MEF_updateState(uint8_t critico){
 	}
 }
 
-void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, uint8_t sensores_activos, uint8_t sensorCaido, uint8_t vent){
+void MEF_updateOutput(uint8_t tempi, uint8_t tempe, uint8_t humi, uint8_t hume, uint8_t sensores_activos, uint8_t sensorCaido, uint8_t vent, uint8_t critico){
 	if(currentState!=previousState){
 		switch(currentState){
 			case DEFAULT:
-				if(sensorCaido)
-					LCD_menuMonitor(ALERTA, SENSOR, tempi, tempe, humi, hume);
+				if(critico)
+					LCD_menuMonitor(ALERTA, CRITICO, tempi, tempe, humi, hume);
 				else
-					LCD_menuMonitor(NORMAL, OK, tempi, tempe, humi, hume);
+					if(sensorCaido)
+						LCD_menuMonitor(ALERTA, SENSOR, tempi, tempe, humi, hume);
+					else
+						LCD_menuMonitor(NORMAL, OK, tempi, tempe, humi, hume);
 			break;
 
 			case REPORTE_COMPONENTES:

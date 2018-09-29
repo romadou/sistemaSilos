@@ -40,6 +40,8 @@ uint8_t indice;
 uint8_t dato;
 uint8_t retransmision;
 uint8_t cantesc;
+uint8_t critic;
+uint8_t flagSensorCaido;
 static uint8_t ACT_ID;
 
 /* Funciones privadas */
@@ -79,6 +81,8 @@ TASK (InitTask){
 	inactiveSlaves=0;
 	retransmision=0;
 	cantesc=0;
+	critic=0;
+	flagSensorCaido=0;
 	VENTILACION_Init();
 	LCD_init(DISPLAY_8X5 | _2_LINES , DISPLAY_ON | CURSOR_OFF);
 	MEF_Init();
@@ -108,8 +112,8 @@ TASK(RefreshDisplayTask){
 		key='s';
 	}
 
-	MEF_updateState(0);
-	MEF_updateOutput(temperatureI,temperatureE,humidityI,humidityE,activeSlavesTotal,inactiveSlaves,fan);
+	MEF_updateState(critic);
+	MEF_updateOutput(temperatureI,temperatureE,humidityI,humidityE,activeSlavesTotal,inactiveSlaves,fan, critic);
 	TerminateTask();
 
 }
@@ -222,14 +226,25 @@ TASK(ActionTask){
 		fan=1;
 	else
 		fan=0;
-	if(temperatureI>=TEMP_ALERTA){
+	
+	if(temperatureI>=TEMP_ALERTA && temperatureI!=255){
 		gpioToggle(LED1);
-		//GPRS_critico();
+		if(critic!=1){ //Si ya esta en estado critico no manda devuelta mensaje
+			GPRS_critico();
+			critic=1;
+		}
 	}
+	else
+		critic=0;
 	if(inactiveSlaves){
 		gpioToggle(LED2);
-		//GPRS_alerta();
+		if(flagSensorCaido!=1){
+			GPRS_alerta();
+			flagSensorCaido=1;
+		}
 	}
+	else
+		flagSensorCaido=0;
 	
 	TerminateTask();
 

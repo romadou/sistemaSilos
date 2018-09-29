@@ -16,7 +16,7 @@
 #define C_TEMP 2 /* En la columna 2 está la última temperatura en °C de c/esclavo */
 #define C_HUM 3 /* En la columna 3 está la última humedad relativa (%) de c/esclavo */
 
-#define TEMP_ALERTA 24
+#define TEMP_ALERTA 26
 #define DATO_INVALIDO 255
 
 #define ACTIVE 1 
