@@ -21,16 +21,17 @@ unsigned char datagram[3];
 Datagram:
 byte 0: 1;
 byte 1: ID sensor;
-byte 2: comand;
+byte 2: command;
 */
 
 /* Estructura respuesta */
-unsigned char resp[6];
+unsigned char resp[5];
 /*
 Resp_x:
 byte 0: 0;
 byte 1: ID sensor;
-byte 2-end: data;
+byte 2-3: data;
+byte 4: checksum;
 */
 
 
@@ -66,7 +67,7 @@ unsigned char PMM_verify(unsigned char *paq, unsigned char id_sensor) {
 
 unsigned char PMM_getData(unsigned char *paq, unsigned char id_sensor, unsigned char *temp, unsigned char *hum) {
 	int i, j=0;
-	for (i=0;i<6;i++){
+	for (i=0;i<5;i++){
 		resp[j] = paq[j];
 		j++;
 	}
